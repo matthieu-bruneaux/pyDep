@@ -12,7 +12,7 @@ more elaborated projects already existing, see below.
 - You can produce a =.dot= file (to be processed by the =dot= utility from
   =graphviz=) from a Python module with:
   #+BEGIN_SRC bash
-  python ast_parser.py exampleModule.py
+  python ast_parser.py tests/exampleModule.py
   #+END_SRC
 - A pdf or png version of the graph can then be obtained with:
   #+BEGIN_SRC bash
