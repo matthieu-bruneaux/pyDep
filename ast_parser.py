@@ -18,10 +18,13 @@ parser = argparse.ArgumentParser(
     description =
     "Produce a dependency graph between functions within a module. The output "
     "is a dot file to be processed with graphviz.")
-parser.add_argument("inputModules", metavar = "MODULE.PY",
+parser.add_argument(dest = "inputModules", metavar = "MODULE.PY",
                     nargs = "+",
                     help = "One or several Python module files",
                     type = str)
+parser.add_argument("-a", "--all", action = "store_true",
+                    help = "Output all function calls, not only calls between "
+                    "functions of the module")
 
 ### * Functions
 
@@ -68,12 +71,13 @@ def makeDotFileContent(relations, onlyLocal = True) :
 ### * main(args)
 
 def main(args) :
+    print(args.all)
     for f in args.inputModules :
         assert f.endswith(".py")
         parsedSource = astParseFile(f)
         functionDefs = getFunctionDef(parsedSource)
         functionCalls = extractFunctionCalls(functionDefs)
-        dotContent = makeDotFileContent(functionCalls)
+        dotContent = makeDotFileContent(functionCalls, onlyLocal = not args.all)
         with open(f[:-3] + ".graph.dot", "w") as fo :
             fo.write(dotContent)
 
