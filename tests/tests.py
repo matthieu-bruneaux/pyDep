@@ -56,3 +56,13 @@ class TestArgParser(unittest.TestCase) :
         commandLine = ["myMod01.py", "myMod02.py"]
         result = mod.parser.parse_args(commandLine)
         self.assertEqual(result.inputModules, ["myMod01.py", "myMod02.py"])
+
+    def test_all_option_False(self) :
+        commandLine = ["myMod01.py"]
+        result = mod.parser.parse_args(commandLine)
+        self.assertFalse(result.all)
+
+    def test_all_option_True(self) :
+        commandLine = ["myMod01.py", "--all"]
+        result = mod.parser.parse_args(commandLine)
+        self.assertTrue(result.all)
