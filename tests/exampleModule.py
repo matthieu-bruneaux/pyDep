@@ -38,3 +38,10 @@ def transcribeDNA(dnaString) :
     transcript = makeDNAcomplement(dnaString)
     transcript = transcript.replace("T", "U")
     return(transcript)
+
+def simpleFunc(x) :
+    return x
+
+def evenSimplerFunc(x) :
+    pass
+
