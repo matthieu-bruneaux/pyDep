@@ -1,0 +1,10 @@
+digraph G {
+fib -> fib;
+sensibleFib -> fib;
+makeDNAreverseComplement -> makeDNAcomplement;
+makeDNAreverseComplement -> validateDNAstring;
+makeDNAcomplement -> validateDNAstring;
+validateDNAstring -> isValidDNAstring;
+transcribeDNA -> makeDNAcomplement;
+transcribeDNA -> validateDNAstring;
+}

@@ -150,3 +150,59 @@ class TestDotPreparation(unittest.TestCase) :
     def test_makeDotFileContent_global(self) :
         expected = "digraph G {\nf2 -> f1;\nf2 -> len;\nf3 -> f3;\n}\n"
         self.assertEqual(self.dotContentGlobal, expected)
+
+### ** class TestMain
+
+class TestMain(unittest.TestCase) :
+
+### *** setUp and TearDown
+
+    def setUp(self) :
+        # Remove pre-existing output file, if any
+        output_file = MY_TEST_MODULE[:-3] + ".graph.dot"
+        if os.path.isfile(output_file) :
+            os.remove(output_file)
+        # Load expected files content
+        localGraphFile = os.path.join(os.path.dirname(MY_TEST_MODULE),
+                                      "expectedFiles",
+                                      os.path.basename(MY_TEST_MODULE[:-3]) +
+                                      ".local.graph.dot")
+        globalGraphFile = os.path.join(os.path.dirname(MY_TEST_MODULE),
+                                      "expectedFiles",
+                                       os.path.basename(MY_TEST_MODULE[:-3])
+                                       + ".global.graph.dot")
+        with open(localGraphFile, "r") as fi :
+            self.localGraphContent = fi.read()
+        with open(globalGraphFile, "r") as fi :
+            self.globalGraphContent = fi.read()
+            
+    def tearDown(self) :
+        output_file = MY_TEST_MODULE[:-3] + ".graph.dot"
+        if os.path.isfile(output_file) :
+            os.remove(output_file)
+
+### *** test_main
+
+    def test_main_local_fileExists(self) :
+        args = [MY_TEST_MODULE]
+        mod.main(mod.parser.parse_args(args))
+        self.assertTrue(os.path.isfile(MY_TEST_MODULE[:-3] + ".graph.dot"))
+
+    def test_main_local_fileContent(self) :
+        args = [MY_TEST_MODULE]
+        mod.main(mod.parser.parse_args(args))
+        with open(MY_TEST_MODULE[:-3] + ".graph.dot", "r") as fi :
+            result = fi.read()
+        self.assertEqual(result, self.localGraphContent)
+
+    def test_main_global_fileExists(self) :
+        args = [MY_TEST_MODULE, "--all"]
+        mod.main(mod.parser.parse_args(args))
+        self.assertTrue(os.path.isfile(MY_TEST_MODULE[:-3] + ".graph.dot"))
+
+    def test_main_global_fileContent(self) :
+        args = [MY_TEST_MODULE, "--all"]
+        mod.main(mod.parser.parse_args(args))
+        with open(MY_TEST_MODULE[:-3] + ".graph.dot", "r") as fi :
+            result = fi.read()
+        self.assertEqual(result, self.globalGraphContent)
