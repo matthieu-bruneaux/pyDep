@@ -71,7 +71,6 @@ def makeDotFileContent(relations, onlyLocal = True) :
 ### * main(args)
 
 def main(args) :
-    print(args.all)
     for f in args.inputModules :
         assert f.endswith(".py")
         parsedSource = astParseFile(f)
