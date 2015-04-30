@@ -1,0 +1,26 @@
+* Description
+
+Python utility to produce a simple graph of the dependencies between function
+in a Python module.
+
+This is a simple home-made project, the aim of which is to teach myself how to
+do this kind of analysis and have some nice time coding. Note that there are
+more elaborated projects already existing, see below.
+
+** Resources used
+
+I use the =ast= built-in module from Python, about which I read when looking at
+the =snakefood= project.
+
+* Related projects
+
+Those projects are more advanced and mature, that's probably what you want to
+get if you need to analyse the dependencies in your project (disclaimer: this
+is the result of a Google search, I didn't tested all of those projects
+myself!). The list is not exhaustive and might miss some interesting projects:
+- [[http://blog.poormansmath.net/pydepgraph-a-dependencies-analyzer-for-python/][pydepgraph]] by Stefano Maggiolo ([[https://github.com/stefano-maggiolo/pydepgraph][GitHub repo]])
+- [[https://pythonhosted.org/modulegraph/][modulegraph]] by Ronald Oussoren
+- [[http://pycallgraph.slowchop.com/en/master/][Python call graph]] by Gerald Kaszuba et al.
+- [[http://furius.ca/snakefood/][snakefood]] by Martin Blais
+- [[http://www.tarind.com/depgraph.html][py2depgraph]] by Toby Dickenson
+
