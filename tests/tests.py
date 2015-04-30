@@ -31,7 +31,7 @@ if not os.path.isfile(MY_TEST_MODULE) :
 
 ### * Run
 
-### ** class(TestArgParser)
+### ** class TestArgParser
 
 class TestArgParser(unittest.TestCase) :
 
@@ -74,7 +74,7 @@ class TestArgParser(unittest.TestCase) :
         result = mod.parser.parse_args(commandLine)
         self.assertTrue(result.all)
 
-### ** class(TestSourceParsing)
+### ** class TestSourceParsing
 
 class TestSourceParsing(unittest.TestCase) :
 
@@ -124,3 +124,29 @@ class TestSourceParsing(unittest.TestCase) :
     def test_extractFunctionCalls_transcribeDNA_calls(self) :
         expected = set(["validateDNAstring", "makeDNAcomplement"])
         self.assertEqual(self.functionCalls["transcribeDNA"], expected)
+
+### ** class TestDotPreparation
+
+class TestDotPreparation(unittest.TestCase) :
+
+### *** setUp and tearDown
+
+    def setUp(self) :
+        relations = {
+            "f1" : set([]),
+            "f2" : set(["f1", "len"]),
+            "f3" : set(["f3"])
+            }
+        self.relations = relations
+        self.dotContentLocal = mod.makeDotFileContent(relations, True)
+        self.dotContentGlobal = mod.makeDotFileContent(relations, False)
+        
+### *** test_makeDotFileContent
+
+    def test_makeDotFileContent_local(self) :
+        expected = "digraph G {\nf2 -> f1;\nf3 -> f3;\n}\n"
+        self.assertEqual(self.dotContentLocal, expected)
+
+    def test_makeDotFileContent_global(self) :
+        expected = "digraph G {\nf2 -> f1;\nf2 -> len;\nf3 -> f3;\n}\n"
+        self.assertEqual(self.dotContentGlobal, expected)
