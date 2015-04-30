@@ -82,7 +82,8 @@ class TestSourceParsing(unittest.TestCase) :
 
     def setUp(self) :
         self.astParsedSource = mod.astParseFile(MY_TEST_MODULE)
-
+        self.functionDef = mod.getFunctionDef(self.astParsedSource)
+        
 ### *** test_astParseFile
 
     def test_astParseFile_returnAstModule(self) :
@@ -94,15 +95,16 @@ class TestSourceParsing(unittest.TestCase) :
 ### *** test_getFunctionDef
 
     def test_getFunctionDef_returnClasses(self) :
-        functionDef = mod.getFunctionDef(self.astParsedSource)
-        classCheck = [x.__class__ == mod.ast.FunctionDef for x in functionDef]
+        classCheck = [x.__class__ == mod.ast.FunctionDef for x in self.functionDef]
         self.assertTrue(all(classCheck))
 
     def test_getFunctionDef_lenReturn(self) :
-        functionDef = mod.getFunctionDef(self.astParsedSource)
-        self.assertEqual(len(functionDef), 9)
+        self.assertEqual(len(self.functionDef), 9)
 
     def test_getFunctionDef_elementName(self) :
-        functionDef = mod.getFunctionDef(self.astParsedSource)
-        self.assertEqual(functionDef[1].name, "sensibleFib")
+        self.assertEqual(self.functionDef[1].name, "sensibleFib")
 
+### *** test_extractFunctionCalls
+
+    def test_extractFunctionCalls_lenReturn(self) :
+        pass
