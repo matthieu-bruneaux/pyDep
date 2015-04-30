@@ -1,6 +1,6 @@
 * Description
 
-Python utility to produce a simple graph of the dependencies between function
+Python utility to produce a simple graph of the dependencies between functions
 in a Python module.
 
 This is a simple home-made project, the aim of which is to teach myself how to

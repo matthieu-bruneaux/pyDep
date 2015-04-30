@@ -1,6 +1,7 @@
+import sys
 import ast
 
-fileName = "process_aln.py"
+fileName = sys.argv[1]
 
 with open(fileName, "r") as fi :
     source = fi.read()
