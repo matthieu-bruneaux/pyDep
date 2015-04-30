@@ -20,6 +20,19 @@ more elaborated projects already existing, see below.
   dot -Tpng dependencies.dot -o myGraph.png # png output
   #+END_SRC
 
+** Makefile
+
+A Makefile is provided, with the following actions (targets):
+- =make examples= :: run pyDep on simple example module files and process the
+     produced dot files with =dot= to make pdf files
+- =make test= :: run the project tests with =nosetests=. Coverage can be
+                 visualized with a web browser afterwards. Requires =nose= and
+                 =coverage= Python modules, which can be installed with =sudo
+                 pip nose= and =sudo pip coverage=.
+- =make clean= :: clean everything (pyc files, test files, examples files)
+
+You can also just type =make= to get some summary help.
+
 ** Resources used
 
 I use the =ast= built-in module from Python, about which I read when looking at
