@@ -1,4 +1,5 @@
 digraph G {
+node[shape=box];
 fib -> fib;
 fib -> type;
 sensibleFib -> fib;

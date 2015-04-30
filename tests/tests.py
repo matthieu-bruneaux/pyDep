@@ -64,15 +64,34 @@ class TestArgParser(unittest.TestCase) :
         result = mod.parser.parse_args(commandLine)
         self.assertEqual(result.inputModules, ["myMod01.py", "myMod02.py"])
 
-    def test_all_option_False(self) :
+### *** test_option_all
+
+    def test_option_all_False(self) :
         commandLine = ["myMod01.py"]
         result = mod.parser.parse_args(commandLine)
         self.assertFalse(result.all)
 
-    def test_all_option_True(self) :
+    def test_option_all_True(self) :
         commandLine = ["myMod01.py", "--all"]
         result = mod.parser.parse_args(commandLine)
         self.assertTrue(result.all)
+
+### *** test_option_nodeShape
+
+    def test_option_nodeShape_default(self) :
+        commandLine = ["myMod01.py", "--all"]
+        result = mod.parser.parse_args(commandLine)
+        self.assertEqual(result.nodeShape, "box")
+
+    def test_option_nodeShape_circle(self) :
+        commandLine = ["myMod01.py", "--nodeShape", "circle"]
+        result = mod.parser.parse_args(commandLine)
+        self.assertEqual(result.nodeShape, "circle")
+
+    def test_option_nodeShape_missing(self) :
+        commandLine = ["myMod01.py", "--nodeShape"]
+        with self.assertRaises(SystemExit) :
+            result = mod.parser.parse_args(commandLine)
 
 ### ** class TestSourceParsing
 
@@ -138,9 +157,14 @@ class TestDotPreparation(unittest.TestCase) :
             "f3" : set(["f3"])
             }
         self.relations = relations
-        self.dotContentLocal = mod.makeDotFileContent(relations, True)
-        self.dotContentGlobal = mod.makeDotFileContent(relations, False)
-        
+        self.dotContentLocal = mod.makeDotFileContent(relations, onlyLocal = True)
+        self.dotContentGlobal = mod.makeDotFileContent(relations, onlyLocal = False)
+
+### *** test_getDotOptions
+
+    def test_getDotOptions(self) :
+        self.assertTrue(False)
+
 ### *** test_makeDotFileContent
 
     def test_makeDotFileContent_local(self) :
@@ -150,6 +174,9 @@ class TestDotPreparation(unittest.TestCase) :
     def test_makeDotFileContent_global(self) :
         expected = "digraph G {\nf2 -> f1;\nf2 -> len;\nf3 -> f3;\n}\n"
         self.assertEqual(self.dotContentGlobal, expected)
+
+    def test_makeDotFileContent_nodeShape(self) :
+        self.assertTrue(False)
 
 ### ** class TestMain
 

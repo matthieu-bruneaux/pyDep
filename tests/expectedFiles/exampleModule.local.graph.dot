@@ -1,4 +1,5 @@
 digraph G {
+node[shape=box];
 fib -> fib;
 sensibleFib -> fib;
 makeDNAreverseComplement -> makeDNAcomplement;
