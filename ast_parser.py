@@ -1,31 +1,61 @@
+### * Description
+
+# Python module to produce a dependency graph between functions within a module
+
+### * Setup
+
+### ** Import
+
+### ** Built-in modules
+
 import sys
 import ast
+import argparse
 
-fileName = sys.argv[1]
+### ** Argument parser
 
-with open(fileName, "r") as fi :
-    source = fi.read()
+parser = argparse.ArgumentParser(
+    description =
+    "Produce a dependency graph between functions within a module. The output "
+    "is a dot file to be processed with graphviz.")
+parser.add_argument("inputModules", metavar = "MODULE.PY",
+                    nargs = "+",
+                    help = "One or several Python module files",
+                    type = str)
 
-a = ast.parse(source)
+### * Functions
 
-# Get only function definitions
+### ** astParseFile(sourceFileName)
 
-b = [x for x in a.body if x.__class__ == ast.FunctionDef]
+def astParseFile(sourceFileName) :
+    with open(sourceFileName, "r") as fi :
+        source = fi.read()
+    return(ast.parse(source))
 
-relations = dict()
+### ** getFunctionDef(astParsedSource)
 
-for func in b :
-    print(func.name)
-    calls = [x for x in ast.walk(func) if x.__class__ == ast.Call]
-    print([x.func.id for x in calls if x.func.__class__ == ast.Name])
-    print([x.func.attr for x in calls if x.func.__class__ == ast.Attribute])
-    calledFunctions = [x.func.id for x in calls if x.func.__class__ == ast.Name]
-    for call in calledFunctions :
-        relations[func.name] = relations.get(func.name, set([]))
-        relations[func.name].add(call)
-    print("\n")
+def getFunctionDef(astParsedSource) :
+    return([x for x in astParsedSource.body if x.__class__ == ast.FunctionDef])
 
-def makeDotFile(relations, onlyLocal = True) :
+### ** extractFunctionCalls(functionDefs)
+
+def extractFunctionCalls(functionDefs) :
+    calls = dict()
+    for func in functionDefs :
+        callsByFunc = [x for x in ast.walk(func)
+                       if x.__class__ == ast.Call]
+        calledFunctions = [x.func.id for x in callsByFunc
+                           if x.func.__class__ == ast.Name]
+        # calledMethods = [x.func.attr for x in callsByFunc
+        #                  if x.func.__class__ == ast.Attribute]
+        for call in calledFunctions :
+            calls[func.name] = calls.get(func.name, set([]))
+            calls[func.name].add(call)
+    return calls
+
+### ** makeDotFileContent(relations, onlyLocal)
+
+def makeDotFileContent(relations, onlyLocal = True) :
     o = ""
     o += "digraph G {\n"
     for caller in relations.keys() :
@@ -35,5 +65,20 @@ def makeDotFile(relations, onlyLocal = True) :
     o += "}\n"
     return(o)
 
-with open("dependencies.dot", "w") as fo :
-    fo.write(makeDotFile(relations))
+### * main(args)
+
+def main(args) :
+    for f in args.inputModules :
+        assert f.endswith(".py")
+        parsedSource = astParseFile(f)
+        functionDefs = getFunctionDef(parsedSource)
+        functionCalls = extractFunctionCalls(functionDefs)
+        dotContent = makeDotFileContent(functionCalls)
+        with open(f[:-3] + ".graph.dot", "w") as fo :
+            fo.write(dotContent)
+
+### * Run
+
+if (__name__ == "__main__") :
+    args = parser.parse_args()
+    main(args)
