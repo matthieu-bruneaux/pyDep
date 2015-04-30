@@ -42,6 +42,7 @@ def getFunctionDef(astParsedSource) :
 def extractFunctionCalls(functionDefs) :
     calls = dict()
     for func in functionDefs :
+        calls[func.name] = calls.get(func.name, set([]))
         callsByFunc = [x for x in ast.walk(func)
                        if x.__class__ == ast.Call]
         calledFunctions = [x.func.id for x in callsByFunc
@@ -49,7 +50,6 @@ def extractFunctionCalls(functionDefs) :
         # calledMethods = [x.func.attr for x in callsByFunc
         #                  if x.func.__class__ == ast.Attribute]
         for call in calledFunctions :
-            calls[func.name] = calls.get(func.name, set([]))
             calls[func.name].add(call)
     return calls
 
