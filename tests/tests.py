@@ -83,7 +83,8 @@ class TestSourceParsing(unittest.TestCase) :
     def setUp(self) :
         self.astParsedSource = mod.astParseFile(MY_TEST_MODULE)
         self.functionDef = mod.getFunctionDef(self.astParsedSource)
-        
+        self.functionCalls = mod.extractFunctionCalls(self.functionDef)
+
 ### *** test_astParseFile
 
     def test_astParseFile_returnAstModule(self) :
@@ -107,4 +108,19 @@ class TestSourceParsing(unittest.TestCase) :
 ### *** test_extractFunctionCalls
 
     def test_extractFunctionCalls_lenReturn(self) :
-        pass
+        self.assertEqual(len(self.functionCalls), 9)
+
+    def test_extractFunctionCalls_typeReturn(self) :
+        self.assertEqual(type(self.functionCalls), dict)
+
+    def test_extractFunctionCalls_simpleFunc_calls(self) :
+        expected = set([])
+        self.assertEqual(self.functionCalls["simpleFunc"], expected)
+
+    def test_extractFunctionCalls_fib_calls(self) :
+        expected = set(["type", "fib"])
+        self.assertEqual(self.functionCalls["fib"], expected)
+
+    def test_extractFunctionCalls_transcribeDNA_calls(self) :
+        expected = set(["validateDNAstring", "makeDNAcomplement"])
+        self.assertEqual(self.functionCalls["transcribeDNA"], expected)
