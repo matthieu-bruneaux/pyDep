@@ -19,8 +19,15 @@
 import unittest
 import sys
 sys.path.append("..")
+import os
 import StringIO
 import ast_parser as mod
+
+### ** Parameters
+
+MY_TEST_MODULE = "exampleModule.py"
+if not os.path.isfile(MY_TEST_MODULE) :
+    MY_TEST_MODULE = os.path.join("tests", MY_TEST_MODULE)
 
 ### * Run
 
@@ -66,3 +73,36 @@ class TestArgParser(unittest.TestCase) :
         commandLine = ["myMod01.py", "--all"]
         result = mod.parser.parse_args(commandLine)
         self.assertTrue(result.all)
+
+### ** class(TestSourceParsing)
+
+class TestSourceParsing(unittest.TestCase) :
+
+### *** setUp and tearDown
+
+    def setUp(self) :
+        self.astParsedSource = mod.astParseFile(MY_TEST_MODULE)
+
+### *** test_astParseFile
+
+    def test_astParseFile_returnAstModule(self) :
+        self.assertEqual(self.astParsedSource.__class__, mod.ast.Module)
+
+    def test_astParseFile_lenModuleBody(self) :
+        self.assertEqual(len(self.astParsedSource.body), 9)
+
+### *** test_getFunctionDef
+
+    def test_getFunctionDef_returnClasses(self) :
+        functionDef = mod.getFunctionDef(self.astParsedSource)
+        classCheck = [x.__class__ == mod.ast.FunctionDef for x in functionDef]
+        self.assertTrue(all(classCheck))
+
+    def test_getFunctionDef_lenReturn(self) :
+        functionDef = mod.getFunctionDef(self.astParsedSource)
+        self.assertEqual(len(functionDef), 9)
+
+    def test_getFunctionDef_elementName(self) :
+        functionDef = mod.getFunctionDef(self.astParsedSource)
+        self.assertEqual(functionDef[1].name, "sensibleFib")
+
