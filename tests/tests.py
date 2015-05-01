@@ -159,11 +159,20 @@ class TestDotPreparation(unittest.TestCase) :
         self.relations = relations
         self.dotContentLocal = mod.makeDotFileContent(relations, onlyLocal = True)
         self.dotContentGlobal = mod.makeDotFileContent(relations, onlyLocal = False)
+        self.dotContentLocalBox = mod.makeDotFileContent(relations,
+                                                         dotOptions = {"nodeShape" : "circle"},
+                                                         onlyLocal = True)
 
 ### *** test_getDotOptions
 
-    def test_getDotOptions(self) :
-        self.assertTrue(False)
+    def test_getDotOptions_nodeShape(self) :
+        class Args :
+            pass
+        args = Args()
+        args.nodeShape = "heartShaped"
+        result = mod.getDotOptions(args)
+        expected = {"nodeShape" : "heartShaped"}
+        self.assertDictEqual(result, expected)
 
 ### *** test_makeDotFileContent
 
@@ -176,7 +185,8 @@ class TestDotPreparation(unittest.TestCase) :
         self.assertEqual(self.dotContentGlobal, expected)
 
     def test_makeDotFileContent_nodeShape(self) :
-        self.assertTrue(False)
+        expected = "digraph G {\nnode[shape=circle];\nf2 -> f1;\nf3 -> f3;\n}\n"
+        self.assertEqual(self.dotContentLocalBox, expected)
 
 ### ** class TestMain
 
