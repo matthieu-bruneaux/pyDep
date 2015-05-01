@@ -22,8 +22,10 @@ help:
 	@echo "Makefile for the pyDep module                                   "
 	@echo "Type: \"make <target>\" where <target> is one of the following :  "
 	@echo "  examples            Run basic examples                        "
+	@echo "  doc_examples        Run doc examples                          "
 	@echo "  test                Run tests                                 "
 	@echo "  clean               Clean everything                          "
+	@echo "  doc_clean           Clean doc examples                        "
 
 ### * Main targets
 
@@ -39,6 +41,24 @@ examples:
 	$(PYTHON) $(MYSCRIPT) $(EXAMPLE_MOD_NOPY).py
 	dot -Tpdf $(EXAMPLE_MOD_NOPY).graph.dot -o $(EXAMPLE_MOD_NOPY).graph.pdf
 
+### ** doc_examples
+doc_examples: doc_clean
+	# Local graph of the pyDep module
+	$(PYTHON) $(MYSCRIPT) $(MYSCRIPT)
+	dot -Tpng $(MYSCRIPT_NOPY).graph.dot -o $(MYSCRIPT_NOPY).local.graph.png
+	mv $(MYSCRIPT_NOPY).graph.dot doc_examples/$(MYSCRIPT_NOPY).local.graph.dot
+	# Global graph of the pyDep module
+	$(PYTHON) $(MYSCRIPT) $(MYSCRIPT) --all
+	dot -Tpng $(MYSCRIPT_NOPY).graph.dot -o $(MYSCRIPT_NOPY).global.graph.png
+	mv $(MYSCRIPT_NOPY).graph.dot doc_examples/$(MYSCRIPT_NOPY).global.graph.dot
+	# Local graph of simple example module
+	$(PYTHON) $(MYSCRIPT) $(EXAMPLE_MOD_NOPY).py
+	dot -Tpng $(EXAMPLE_MOD_NOPY).graph.dot -o $(EXAMPLE_MOD_NOPY).graph.png
+	mv $(EXAMPLE_MOD_NOPY).graph.dot doc_examples/
+	# Move the output to doc_examples
+	mv $(MYSCRIPT_NOPY).local.graph.png $(MYSCRIPT_NOPY).global.graph.png \
+	  $(EXAMPLE_MOD_NOPY).graph.png doc_examples/
+
 ### ** test
 test:
 	nosetests $(TEST_SCRIPT) --with-coverage --cover-package=ast_parser --cover-html
@@ -47,7 +67,7 @@ test:
 tests: test
 
 ### ** clean
-clean:
+clean: doc_clean
 	# pyc files
 	rm -f *.pyc tests/*.pyc
 	# Coverage files
@@ -59,3 +79,6 @@ clean:
 	rm -f $(MYSCRIPT_NOPY).global.graph.pdf
 	rm -f $(EXAMPLE_MOD_NOPY).graph.dot
 	rm -f $(EXAMPLE_MOD_NOPY).graph.pdf
+
+doc_clean:
+	rm -f doc_examples/*

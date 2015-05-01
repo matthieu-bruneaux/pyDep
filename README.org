@@ -20,6 +20,17 @@ more elaborated projects already existing, see below.
   dot -Tpng dependencies.dot -o myGraph.png # png output
   #+END_SRC
 
+** Example output
+
+Here is an example output:
+[[file://doc_examples/exampleModule.graph.py]]
+
+The generated dot file was:
+#+INCLUDE: doc_examples/exampleModule.graph.dot
+
+The original Python file was:
+#+INCLUDE: tests/exampleModule.py
+
 ** Makefile
 
 A Makefile is provided, with the following actions (targets):
