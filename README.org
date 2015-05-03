@@ -23,22 +23,8 @@ more elaborated projects already existing, see below.
 ** Example output
 
 Here is an example output:
-[[https://github.com/matthieu-bruneaux/pyDep/blob/master/doc_examples/exampleModule.graph.png]]
 
-The generated dot file was:
-#+BEGIN_EXAMPLE
-digraph G {
-node[shape=box];
-fib -> fib;
-sensibleFib -> fib;
-makeDNAreverseComplement -> makeDNAcomplement;
-makeDNAreverseComplement -> validateDNAstring;
-makeDNAcomplement -> validateDNAstring;
-validateDNAstring -> isValidDNAstring;
-transcribeDNA -> makeDNAcomplement;
-transcribeDNA -> validateDNAstring;
-}
-#+END_EXAMPLE
+[[https://github.com/matthieu-bruneaux/pyDep/blob/master/doc_examples/exampleModule.graph.png]]
 
 The original Python file was:
 #+BEGIN_SRC Python
@@ -89,6 +75,21 @@ def simpleFunc(x) :
 def evenSimplerFunc(x) :
     pass
 #+END_SRC
+
+The generated dot file was:
+#+BEGIN_EXAMPLE
+digraph G {
+node[shape=box];
+fib -> fib;
+sensibleFib -> fib;
+makeDNAreverseComplement -> makeDNAcomplement;
+makeDNAreverseComplement -> validateDNAstring;
+makeDNAcomplement -> validateDNAstring;
+validateDNAstring -> isValidDNAstring;
+transcribeDNA -> makeDNAcomplement;
+transcribeDNA -> validateDNAstring;
+}
+#+END_EXAMPLE
 
 ** Makefile
 
