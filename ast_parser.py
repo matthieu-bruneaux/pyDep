@@ -30,6 +30,8 @@ parser.add_argument("-a", "--all", action = "store_true",
                     "functions of the module")
 parser.add_argument("--nodeShape", type = str, default = "box",
                     help = "Node shape (default: box)")
+parser.add_argument("--clusters", action = "store_true",
+                    help = "Group the functions by their module of origin")
 
 ### * Functions
 
@@ -61,6 +63,22 @@ def extractFunctionCalls(functionDefs) :
             calls[func.name].add(call)
     return calls
 
+### ** getFunctionOrigin(functionCalls, moduleName)
+
+def getFunctionOrigin(functionCalls, moduleName) :
+    origins = dict()
+    origins["built-in"] = set([])
+    origins[moduleName] = set([])
+    allFunctions = functionCalls.keys()
+    for x in functionCalls.values() :
+        allFunctions += list(x)
+    for func in allFunctions :
+        if func in functionCalls.keys() :
+            origins[moduleName].add(func)
+        else :
+            origins["built-in"].add(func)
+    return origins
+        
 ### ** getDotOptions(parsedArgs)
 
 def getDotOptions(parsedArgs) :
@@ -69,14 +87,30 @@ def getDotOptions(parsedArgs) :
     options = dict()
     options["nodeShape"] = parsedArgs.nodeShape
     return options
-    
+
+### ** writeDotSubgraphs(subgraphGroups, builtIn)
+
+def writeDotSubgraphs(subgraphGroups, builtIn = False) :
+    o = ""
+    for cluster in subgraphGroups.keys() :
+        if (cluster != "built-in" or builtIn) :
+            o += "subgraph cluster" + cluster + " {\n"
+            for element in subgraphGroups[cluster] :
+                o += element + ";\n"
+            o += "}\n"
+    return o
+        
 ### ** makeDotFileContent(relations, onlyLocal)
 
-def makeDotFileContent(relations, dotOptions = dict(), onlyLocal = True) :
+def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
+                       onlyLocal = True) :
     o = ""
     o += "digraph G {\n"
     if "nodeShape" in dotOptions.keys() :
         o += "node[shape=" + dotOptions["nodeShape"] + "];\n"
+    if not funcOrigin is None :
+        # Write subgraphs
+        o += writeDotSubgraphs(funcOrigin)
     for caller in relations.keys() :
         for called in relations[caller] :
             if (not onlyLocal) or (called in relations.keys()) :
@@ -92,8 +126,14 @@ def main(args) :
         parsedSource = astParseFile(f)
         functionDefs = getFunctionDef(parsedSource)
         functionCalls = extractFunctionCalls(functionDefs)
+        if (args.clusters) :
+            functionOrigins = getFunctionOrigin(functionCalls, "myModule")
+        else :
+            functionOrigins = None
         dotOptions = getDotOptions(args)
-        dotContent = makeDotFileContent(functionCalls, dotOptions = dotOptions,
+        dotContent = makeDotFileContent(functionCalls,
+                                        funcOrigin = functionOrigins,
+                                        dotOptions = dotOptions,
                                         onlyLocal = not args.all)
         with open(f[:-3] + ".graph.dot", "w") as fo :
             fo.write(dotContent)
