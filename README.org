@@ -16,20 +16,79 @@ more elaborated projects already existing, see below.
   #+END_SRC
 - A pdf or png version of the graph can then be obtained with:
   #+BEGIN_SRC bash
-  dot -Tpdf dependencies.dot -o myGraph.pdf # pdf output
-  dot -Tpng dependencies.dot -o myGraph.png # png output
+  dot -Tpdf exampleModule.graph.dot -o myGraph.pdf # pdf output
+  dot -Tpng exampleModule.graph.dot -o myGraph.png # png output
   #+END_SRC
 
 ** Example output
 
 Here is an example output:
-[[file://doc_examples/exampleModule.graph.py]]
+[[https://github.com/matthieu-bruneaux/pyDep/blob/master/doc_examples/exampleModule.graph.png]]
 
 The generated dot file was:
-#+INCLUDE: doc_examples/exampleModule.graph.dot
+#+BEGIN_EXAMPLE
+digraph G {
+node[shape=box];
+fib -> fib;
+sensibleFib -> fib;
+makeDNAreverseComplement -> makeDNAcomplement;
+makeDNAreverseComplement -> validateDNAstring;
+makeDNAcomplement -> validateDNAstring;
+validateDNAstring -> isValidDNAstring;
+transcribeDNA -> makeDNAcomplement;
+transcribeDNA -> validateDNAstring;
+}
+#+END_EXAMPLE
 
 The original Python file was:
-#+INCLUDE: tests/exampleModule.py
+#+BEGIN_SRC Python
+def fib(n) :
+    assert type(n) == int
+    if n == 0 or n == 1 :
+        return(1)
+    else :
+        return fib(n-1) + fib(n-2)
+
+def sensibleFib(n) :
+    if n < 20 :
+        return fib(n)
+    else :
+        raise Exception("n is too large")
+
+def makeDNAcomplement(dnaString) :
+    validateDNAstring(dnaString)
+    dnaComplementDict = {"A" : "T", "T" : "A", "G" : "C", "C" : "G"}
+    complement = ""
+    for nt in dnaString :
+        complement += dnaComplementDict[nt]
+    return complement
+
+def makeDNAreverseComplement(dnaString) :
+    validateDNAstring(dnaString)
+    complement = list(makeDNAcomplement(dnaString))
+    complement.reverse()
+    return("".join(complement))
+
+def validateDNAstring(dnaString) :
+    if not isValidDNAstring(dnaString) :
+        raise Exception("Not a valid DNA string")
+
+def isValidDNAstring(dnaString) :
+    allowedChar = "ATGC"
+    return(all([x in allowedChar for x in dnaString]))
+
+def transcribeDNA(dnaString) :
+    validateDNAstring(dnaString)
+    transcript = makeDNAcomplement(dnaString)
+    transcript = transcript.replace("T", "U")
+    return(transcript)
+
+def simpleFunc(x) :
+    return x
+
+def evenSimplerFunc(x) :
+    pass
+#+END_SRC
 
 ** Makefile
 
