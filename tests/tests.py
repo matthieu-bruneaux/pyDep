@@ -21,7 +21,7 @@ import sys
 sys.path.append("..")
 import os
 import StringIO
-import ast_parser as mod
+import pyDep as mod
 
 ### ** Parameters
 

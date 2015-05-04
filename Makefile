@@ -6,7 +6,7 @@
 
 ### ** Main script
 PYTHON=python
-MYSCRIPT_NOPY=ast_parser
+MYSCRIPT_NOPY=pyDep
 MYSCRIPT=$(MYSCRIPT_NOPY).py
 
 ### ** Tests
@@ -61,8 +61,8 @@ doc_examples: doc_clean
 
 ### ** test
 test:
-	nosetests $(TEST_SCRIPT) --with-coverage --cover-package=ast_parser --cover-html
-	@echo "\nThe coverage results are accessible from cover/index.html"
+	nosetests $(TEST_SCRIPT) --with-coverage --cover-package=$(MYSCRIPT_NOPY) --cover-html
+	@echo -e "\nThe coverage results are accessible from cover/index.html"
 
 tests: test
 
