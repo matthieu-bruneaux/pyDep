@@ -29,6 +29,7 @@ help:
 	@echo "  test                Run tests                                 "
 	@echo ""
 	@echo "  install             Run pip install -e  (must be sudo)        "
+	@echo "  uninstall           Remove the package (must be sudo)         "
 	@echo ""
 	@echo "  clean               Clean everything except the egg info      "
 	@echo "  clean_egg           Clean egg info folder (must be sudo)      "
@@ -76,6 +77,11 @@ tests: test
 ### ** install
 install:
 	pip install -e .
+
+### ** uninstall
+uninstall:
+	pip uninstall -y $(MODULE_NAME)
+	rm /usr/bin/pyDep
 
 ### ** clean
 clean: doc_clean

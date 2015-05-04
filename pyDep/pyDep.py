@@ -119,9 +119,11 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
     o += "}\n"
     return(o)
 
-### * main(args)
+### * main()
 
-def main(args) :
+def main(args = None) :
+    if args is None :
+        args = parser.parse_args()
     for f in args.inputModules :
         assert f.endswith(".py")
         parsedSource = astParseFile(f)
@@ -138,9 +140,3 @@ def main(args) :
                                         onlyLocal = not args.all)
         with open(os.path.basename(f[:-3]) + ".graph.dot", "w") as fo :
             fo.write(dotContent)
-
-### * Run
-
-if (__name__ == "__main__") :
-    args = parser.parse_args()
-    main(args)
