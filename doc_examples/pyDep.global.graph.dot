@@ -1,0 +1,19 @@
+digraph G {
+node[shape=box];
+getDotOptions -> dict;
+main -> getDotOptions;
+main -> makeDotFileContent;
+main -> getFunctionOrigin;
+main -> getFunctionDef;
+main -> astParseFile;
+main -> open;
+main -> extractFunctionCalls;
+makeDotFileContent -> dict;
+makeDotFileContent -> writeDotSubgraphs;
+astParseFile -> open;
+getFunctionOrigin -> list;
+getFunctionOrigin -> set;
+getFunctionOrigin -> dict;
+extractFunctionCalls -> set;
+extractFunctionCalls -> dict;
+}

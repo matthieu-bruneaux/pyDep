@@ -1,0 +1,10 @@
+digraph G {
+node[shape=box];
+main -> getDotOptions;
+main -> makeDotFileContent;
+main -> getFunctionOrigin;
+main -> getFunctionDef;
+main -> astParseFile;
+main -> extractFunctionCalls;
+makeDotFileContent -> writeDotSubgraphs;
+}
