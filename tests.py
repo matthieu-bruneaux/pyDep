@@ -21,7 +21,7 @@ import sys
 sys.path.append("..")
 import os
 import StringIO
-from pyDep import pyDep as mod
+from pydep import pydep as mod
 
 ### ** Parameters
 

@@ -1,13 +1,13 @@
 ### * Description
 
-# Makefile for the pyDep mdule
+# Makefile for the pydep mdule
 
 ### * Variables
 
 ### ** Main script
 PYTHON=python
-MODULE_NAME=pyDep
-MYSCRIPT_NOPY=pyDep
+MODULE_NAME=pydep
+MYSCRIPT_NOPY=pydep
 MYSCRIPT=$(MODULE_NAME)/$(MYSCRIPT_NOPY).py
 
 ### ** Tests
@@ -20,7 +20,7 @@ EXAMPLE_MOD_NOPY=exampleModule
 ### * Help
 
 help:
-	@echo "Makefile for the pyDep module                                   "
+	@echo "Makefile for the pydep module                                   "
 	@echo ""
 	@echo "Type: \"make <target>\" where <target> is one of the following :  "
 	@echo ""
@@ -39,10 +39,10 @@ help:
 
 ### ** examples
 examples:
-	# Local graph of the pyDep module
+	# Local graph of the pydep module
 	$(PYTHON) $(MYSCRIPT) $(MYSCRIPT)
 	dot -Tpdf $(MYSCRIPT_NOPY).graph.dot -o $(MYSCRIPT_NOPY).local.graph.pdf
-	# Global graph of the pyDep module
+	# Global graph of the pydep module
 	$(PYTHON) $(MYSCRIPT) $(MYSCRIPT) --all
 	dot -Tpdf $(MYSCRIPT_NOPY).graph.dot -o $(MYSCRIPT_NOPY).global.graph.pdf
 	# Local graph of simple example module
@@ -51,11 +51,11 @@ examples:
 
 ### ** doc_examples
 doc_examples: doc_clean
-	# Local graph of the pyDep module
+	# Local graph of the pydep module
 	$(PYTHON) $(MYSCRIPT) $(MYSCRIPT)
 	dot -Tpng $(MYSCRIPT_NOPY).graph.dot -o $(MYSCRIPT_NOPY).local.graph.png
 	mv $(MYSCRIPT_NOPY).graph.dot doc_examples/$(MYSCRIPT_NOPY).local.graph.dot
-	# Global graph of the pyDep module
+	# Global graph of the pydep module
 	$(PYTHON) $(MYSCRIPT) $(MYSCRIPT) --all
 	dot -Tpng $(MYSCRIPT_NOPY).graph.dot -o $(MYSCRIPT_NOPY).global.graph.png
 	mv $(MYSCRIPT_NOPY).graph.dot doc_examples/$(MYSCRIPT_NOPY).global.graph.dot
@@ -81,12 +81,12 @@ install:
 ### ** uninstall
 uninstall:
 	pip uninstall -y $(MODULE_NAME)
-	rm /usr/bin/pyDep
+	rm /usr/bin/pydep
 
 ### ** clean
 clean: doc_clean
 	# pyc files
-	rm -f *.pyc tests/*.pyc pyDep/*.pyc
+	rm -f *.pyc tests/*.pyc pydep/*.pyc
 	# Coverage files
 	rm -f .coverage
 	rm -fr cover
