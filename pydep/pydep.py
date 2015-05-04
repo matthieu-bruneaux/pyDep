@@ -9,8 +9,10 @@
 ### ** Built-in modules
 
 import sys
+import os
 import ast
 import argparse
+import subprocess
 
 ### ** Argument parser
 
@@ -32,6 +34,9 @@ parser.add_argument("--nodeShape", type = str, default = "box",
                     help = "Node shape (default: box)")
 parser.add_argument("--clusters", action = "store_true",
                     help = "Group the functions by their module of origin")
+parser.add_argument("-q", "--quickView", action = "store_true",
+                    help = "Provide a simple display of the dot file through "
+                    "ImageMagick and remove the dot file")
 
 ### * Functions
 
@@ -118,9 +123,21 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
     o += "}\n"
     return(o)
 
-### * main(args)
+### ** viewDotFile(inputFile)
 
-def main(args) :
+def viewDotFile(inputFile) :
+    commandLineDot = ["dot", "-Tpng", inputFile]
+    pDot = subprocess.Popen(commandLineDot, stdout = subprocess.PIPE)
+    commandLineDisplay = ["display", "-"]
+    pDisplay = subprocess.Popen(commandLineDisplay, stdin = subprocess.PIPE)
+    pDisplay.communicate(input = pDot.communicate()[0])
+    return pDisplay.wait()
+    
+### * main()
+
+def main(args = None) :
+    if args is None :
+        args = parser.parse_args()
     for f in args.inputModules :
         assert f.endswith(".py")
         parsedSource = astParseFile(f)
@@ -135,11 +152,13 @@ def main(args) :
                                         funcOrigin = functionOrigins,
                                         dotOptions = dotOptions,
                                         onlyLocal = not args.all)
-        with open(f[:-3] + ".graph.dot", "w") as fo :
+        with open(os.path.basename(f[:-3]) + ".graph.dot", "w") as fo :
             fo.write(dotContent)
+    if args.quickView :
+        viewDotFile(os.path.basename(f[:-3]) + ".graph.dot")
+        os.remove(os.path.basename(f[:-3]) + ".graph.dot")
 
-### * Run
+### * run
 
 if (__name__ == "__main__") :
-    args = parser.parse_args()
-    main(args)
+    main()

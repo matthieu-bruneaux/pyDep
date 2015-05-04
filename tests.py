@@ -21,7 +21,7 @@ import sys
 sys.path.append("..")
 import os
 import StringIO
-import ast_parser as mod
+from pydep import pydep as mod
 
 ### ** Parameters
 
@@ -214,7 +214,7 @@ class TestMain(unittest.TestCase) :
             self.globalGraphContent = fi.read()
             
     def tearDown(self) :
-        output_file = MY_TEST_MODULE[:-3] + ".graph.dot"
+        output_file = os.path.basename(MY_TEST_MODULE[:-3]) + ".graph.dot"
         if os.path.isfile(output_file) :
             os.remove(output_file)
 
@@ -223,23 +223,27 @@ class TestMain(unittest.TestCase) :
     def test_main_local_fileExists(self) :
         args = [MY_TEST_MODULE]
         mod.main(mod.parser.parse_args(args))
-        self.assertTrue(os.path.isfile(MY_TEST_MODULE[:-3] + ".graph.dot"))
+        self.assertTrue(os.path.isfile(os.path.basename(MY_TEST_MODULE[:-3]) +
+                                       ".graph.dot"))
 
     def test_main_local_fileContent(self) :
         args = [MY_TEST_MODULE]
         mod.main(mod.parser.parse_args(args))
-        with open(MY_TEST_MODULE[:-3] + ".graph.dot", "r") as fi :
+        with open(os.path.basename(MY_TEST_MODULE[:-3])
+                  + ".graph.dot", "r") as fi :
             result = fi.read()
         self.assertEqual(result, self.localGraphContent)
 
     def test_main_global_fileExists(self) :
         args = [MY_TEST_MODULE, "--all"]
         mod.main(mod.parser.parse_args(args))
-        self.assertTrue(os.path.isfile(MY_TEST_MODULE[:-3] + ".graph.dot"))
+        self.assertTrue(os.path.isfile(os.path.basename(MY_TEST_MODULE[:-3])
+                                       + ".graph.dot"))
 
     def test_main_global_fileContent(self) :
         args = [MY_TEST_MODULE, "--all"]
         mod.main(mod.parser.parse_args(args))
-        with open(MY_TEST_MODULE[:-3] + ".graph.dot", "r") as fi :
+        with open(os.path.basename(MY_TEST_MODULE[:-3])
+                  + ".graph.dot", "r") as fi :
             result = fi.read()
         self.assertEqual(result, self.globalGraphContent)

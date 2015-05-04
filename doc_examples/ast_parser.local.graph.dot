@@ -1,8 +1,0 @@
-digraph G {
-node[shape=box];
-main -> getDotOptions;
-main -> makeDotFileContent;
-main -> getFunctionDef;
-main -> astParseFile;
-main -> extractFunctionCalls;
-}

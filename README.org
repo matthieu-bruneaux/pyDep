@@ -1,18 +1,39 @@
 * Description
 
-Python utility to produce a simple graph of the dependencies between functions
-in a Python module.
+Python utility to produce *a simple graph of the dependencies between
+functions* in a Python module.
 
 This is a simple home-made project, the aim of which is to teach myself how to
-do this kind of analysis and have some nice time coding. Note that there are
-more elaborated projects already existing, see below.
+do this kind of analysis, learn how to package a Python module and enjoy some
+nice time coding. Note that there are more elaborated projects already
+existing (see below).
+
+Disclaimer: while I try to make this code correct, there is no guarantee that
+it is bug free! Use at your own risk!
+
+** Installation
+
+- You can clone the git repository with:
+  #+BEGIN_SRC bash
+  git clone https://github.com/matthieu-bruneaux/pydep.git
+  #+END_SRC
+- You can then install the module with:
+  #+BEGIN_SRC bash
+  sudo make install
+  #+END_SRC
+- To remove it, run (from the git repository folder):
+  #+BEGIN_SRC bash
+  sudo make uninstall
+  #+END_SRC
+  This will basically run =pip uninstall pydep= and remove the script from
+  =/usr/bin/=.
 
 ** Usage
 
 - You can produce a =.dot= file (to be processed by the =dot= utility from
   =graphviz=) from a Python module with:
   #+BEGIN_SRC bash
-  python ast_parser.py tests/exampleModule.py
+  pydep tests/exampleModule.py
   #+END_SRC
 - A pdf or png version of the graph can then be obtained with:
   #+BEGIN_SRC bash
@@ -93,7 +114,7 @@ transcribeDNA -> validateDNAstring;
 
 ** Makefile
 
-A Makefile is provided, with the following actions (targets):
+A Makefile is provided, with the following actions (targets) among others:
 - =make examples= :: run pyDep on simple example module files and process the
      produced dot files with =dot= to make pdf files
 - =make test= :: run the project tests with =nosetests=. Coverage can be
@@ -106,8 +127,8 @@ You can also just type =make= to get some summary help.
 
 ** Resources used
 
-I use the =ast= built-in module from Python, about which I read when looking at
-the =snakefood= project.
+This project uses the =ast= built-in module from Python, about which I read
+when looking at the =snakefood= project.
 
 * Related projects
 
