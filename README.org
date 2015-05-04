@@ -48,8 +48,9 @@ it is bug free! Use at your own risk!
 ** Example output
 
 Here is an example output:
-
+#+BEGIN_CENTER
 [[https://github.com/matthieu-bruneaux/pydep/blob/master/doc_examples/exampleModule.graph.png]]
+#+END_CENTER
 
 The original Python file was:
 #+BEGIN_SRC Python
