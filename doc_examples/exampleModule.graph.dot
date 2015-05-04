@@ -1,0 +1,11 @@
+digraph G {
+node[shape=box];
+fib -> fib;
+sensibleFib -> fib;
+makeDNAreverseComplement -> makeDNAcomplement;
+makeDNAreverseComplement -> validateDNAstring;
+makeDNAcomplement -> validateDNAstring;
+validateDNAstring -> isValidDNAstring;
+transcribeDNA -> makeDNAcomplement;
+transcribeDNA -> validateDNAstring;
+}
