@@ -6,25 +6,32 @@
 
 ### ** Main script
 PYTHON=python
+MODULE_NAME=pyDep
 MYSCRIPT_NOPY=pyDep
-MYSCRIPT=$(MYSCRIPT_NOPY).py
+MYSCRIPT=$(MODULE_NAME)/$(MYSCRIPT_NOPY).py
 
 ### ** Tests
 TEST_DIR=tests
-TEST_SCRIPT=$(TEST_DIR)/tests.py
+TEST_SCRIPT=tests.py
 
 ### ** Examples
-EXAMPLE_MOD_NOPY=$(TEST_DIR)/exampleModule
+EXAMPLE_MOD_NOPY=exampleModule
 
 ### * Help
 
 help:
 	@echo "Makefile for the pyDep module                                   "
+	@echo ""
 	@echo "Type: \"make <target>\" where <target> is one of the following :  "
+	@echo ""
 	@echo "  examples            Run basic examples                        "
 	@echo "  doc_examples        Run doc examples                          "
 	@echo "  test                Run tests                                 "
-	@echo "  clean               Clean everything                          "
+	@echo ""
+	@echo "  install             Run pip install -e  (must be sudo)        "
+	@echo ""
+	@echo "  clean               Clean everything except the egg info      "
+	@echo "  clean_egg           Clean egg info folder (must be sudo)      "
 	@echo "  doc_clean           Clean doc examples                        "
 
 ### * Main targets
@@ -38,7 +45,7 @@ examples:
 	$(PYTHON) $(MYSCRIPT) $(MYSCRIPT) --all
 	dot -Tpdf $(MYSCRIPT_NOPY).graph.dot -o $(MYSCRIPT_NOPY).global.graph.pdf
 	# Local graph of simple example module
-	$(PYTHON) $(MYSCRIPT) $(EXAMPLE_MOD_NOPY).py
+	$(PYTHON) $(MYSCRIPT) $(TEST_DIR)/$(EXAMPLE_MOD_NOPY).py
 	dot -Tpdf $(EXAMPLE_MOD_NOPY).graph.dot -o $(EXAMPLE_MOD_NOPY).graph.pdf
 
 ### ** doc_examples
@@ -52,7 +59,7 @@ doc_examples: doc_clean
 	dot -Tpng $(MYSCRIPT_NOPY).graph.dot -o $(MYSCRIPT_NOPY).global.graph.png
 	mv $(MYSCRIPT_NOPY).graph.dot doc_examples/$(MYSCRIPT_NOPY).global.graph.dot
 	# Local graph of simple example module
-	$(PYTHON) $(MYSCRIPT) $(EXAMPLE_MOD_NOPY).py
+	$(PYTHON) $(MYSCRIPT) $(TEST_DIR)/$(EXAMPLE_MOD_NOPY).py
 	dot -Tpng $(EXAMPLE_MOD_NOPY).graph.dot -o $(EXAMPLE_MOD_NOPY).graph.png
 	mv $(EXAMPLE_MOD_NOPY).graph.dot doc_examples/
 	# Move the output to doc_examples
@@ -66,10 +73,14 @@ test:
 
 tests: test
 
+### ** install
+install:
+	pip install -e .
+
 ### ** clean
 clean: doc_clean
 	# pyc files
-	rm -f *.pyc tests/*.pyc
+	rm -f *.pyc tests/*.pyc pyDep/*.pyc
 	# Coverage files
 	rm -f .coverage
 	rm -fr cover
@@ -79,6 +90,9 @@ clean: doc_clean
 	rm -f $(MYSCRIPT_NOPY).global.graph.pdf
 	rm -f $(EXAMPLE_MOD_NOPY).graph.dot
 	rm -f $(EXAMPLE_MOD_NOPY).graph.pdf
+
+clean_egg:
+	rm -fr $(MODULE_NAME).egg-info
 
 doc_clean:
 	rm -f doc_examples/*

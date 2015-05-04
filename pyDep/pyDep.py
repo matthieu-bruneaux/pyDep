@@ -9,6 +9,7 @@
 ### ** Built-in modules
 
 import sys
+import os
 import ast
 import argparse
 
@@ -135,7 +136,7 @@ def main(args) :
                                         funcOrigin = functionOrigins,
                                         dotOptions = dotOptions,
                                         onlyLocal = not args.all)
-        with open(f[:-3] + ".graph.dot", "w") as fo :
+        with open(os.path.basename(f[:-3]) + ".graph.dot", "w") as fo :
             fo.write(dotContent)
 
 ### * Run
