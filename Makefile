@@ -81,7 +81,6 @@ install:
 ### ** uninstall
 uninstall:
 	pip uninstall -y $(MODULE_NAME)
-	rm /usr/bin/pydep
 
 ### ** clean
 clean: doc_clean

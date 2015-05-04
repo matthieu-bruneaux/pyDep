@@ -6,4 +6,4 @@ toto.pdf
 *.pdf
 .coverage
 cover/*
-pyDep.egg-info/*
+pydep.egg-info/*

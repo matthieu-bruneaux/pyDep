@@ -4,10 +4,10 @@
 
 from setuptools import setup
 
-setup(name = "pyDep",
+setup(name = "pydep",
       version = "0.0.1",
-      packages = ["pyDep"],
+      packages = ["pydep"],
       entry_points =  {
-          "console_scripts" : ["pyDep = pyDep:main"]
+          "console_scripts" : ["pydep = pydep:main"]
       }
 )
