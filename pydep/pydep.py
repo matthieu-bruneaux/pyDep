@@ -37,6 +37,8 @@ parser.add_argument("--clusters", action = "store_true",
 parser.add_argument("-q", "--quickView", action = "store_true",
                     help = "Provide a simple display of the dot file through "
                     "ImageMagick and remove the dot file")
+parser.add_argument("-m", "--getMethods", action = "store_true",
+                    help = "Also output method calls")
 
 ### * Functions
 
@@ -54,7 +56,7 @@ def getFunctionDef(astParsedSource) :
 
 ### ** extractFunctionCalls(functionDefs)
 
-def extractFunctionCalls(functionDefs) :
+def extractFunctionCalls(functionDefs, getMethods = False) :
     calls = dict()
     for func in functionDefs :
         calls[func.name] = calls.get(func.name, set([]))
@@ -62,10 +64,23 @@ def extractFunctionCalls(functionDefs) :
                        if x.__class__ == ast.Call]
         calledFunctions = [x.func.id for x in callsByFunc
                            if x.func.__class__ == ast.Name]
-        # calledMethods = [x.func.attr for x in callsByFunc
-        #                  if x.func.__class__ == ast.Attribute]
+        calledMethods = [(x.func.value, x.func.attr) for x in callsByFunc
+                         if x.func.__class__ == ast.Attribute]
         for call in calledFunctions :
             calls[func.name].add(call)
+        if getMethods :
+            for call in calledMethods :
+                value = call[0]
+                if value.__class__ == ast.Name :
+                    className = value.id
+                elif value.__class__ == ast.Str :
+                    className = "str"
+                elif value.__class__ == ast.Subscript :
+                    className = "dict"
+                else :
+                    raise Exception("Unknown ast attr class" + repr(value.__class__))
+                method = call[1]
+                calls[func.name].add("_".join([className, method]))
     return calls
 
 ### ** getFunctionOrigin(functionCalls, moduleName)
@@ -142,7 +157,7 @@ def main(args = None) :
         assert f.endswith(".py")
         parsedSource = astParseFile(f)
         functionDefs = getFunctionDef(parsedSource)
-        functionCalls = extractFunctionCalls(functionDefs)
+        functionCalls = extractFunctionCalls(functionDefs, args.getMethods)
         if (args.clusters) :
             functionOrigins = getFunctionOrigin(functionCalls, "myModule")
         else :
