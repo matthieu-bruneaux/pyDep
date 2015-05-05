@@ -5,7 +5,7 @@
 from setuptools import setup
 
 setup(name = "pydep",
-      version = "0.0.1",
+      version = "0.0.2.beta",
       packages = ["pydep"],
       entry_points =  {
           "console_scripts" : ["pydep = pydep:main"]
