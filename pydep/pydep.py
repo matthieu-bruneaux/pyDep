@@ -33,12 +33,14 @@ parser.add_argument("-a", "--all", action = "store_true",
 parser.add_argument("--nodeShape", type = str, default = "box",
                     help = "Node shape (default: box)")
 parser.add_argument("--clusters", action = "store_true",
-                    help = "Group the functions by their module of origin")
+                    help = "Group the functions by their module of origin",
+                    default = True)
 parser.add_argument("-q", "--quickView", action = "store_true",
                     help = "Provide a simple display of the dot file through "
                     "ImageMagick and remove the dot file")
 parser.add_argument("-m", "--getMethods", action = "store_true",
-                    help = "Also output method calls")
+                    help = "Also output method calls",
+                    default = True)
 
 ### * Functions
 
@@ -185,7 +187,6 @@ def main(args = None) :
         functionDefs = getFunctionDef(parsedSource)
         functionCalls = extractFunctionCalls(functionDefs, args.getMethods)
         importedModules = set([])
-        print(getImportedModules(parsedSource))
         [importedModules.add(x[0]) for x in getImportedModules(parsedSource)]
         [importedModules.add(x[1]) for x in getImportedModules(parsedSource)]
         if (args.clusters) :
@@ -193,7 +194,6 @@ def main(args = None) :
                                                 keepOnlyFrom = importedModules)
         else :
             functionOrigins = None
-        print(functionOrigins)
         dotOptions = getDotOptions(args)
         dotContent = makeDotFileContent(functionCalls,
                                         funcOrigin = functionOrigins,
