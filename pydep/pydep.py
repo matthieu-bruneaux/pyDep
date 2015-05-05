@@ -49,6 +49,14 @@ def astParseFile(sourceFileName) :
         source = fi.read()
     return(ast.parse(source))
 
+### ** getImportedModules(astParsedSource)
+def getImportedModules(astParsedSource) :
+    importFromStatements = [(x.names[0].name, x.names[0].asname)
+                            for x in astParsedSource.body if x.__class__ == ast.ImportFrom]
+    importStatements = [(x.names[0].name, x.names[0].asname)
+                        for x in astParsedSource.body if x.__class__ == ast.Import]
+    return(importFromStatements + importStatements)
+    
 ### ** getFunctionDef(astParsedSource)
 
 def getFunctionDef(astParsedSource) :
@@ -80,12 +88,12 @@ def extractFunctionCalls(functionDefs, getMethods = False) :
                 else :
                     raise Exception("Unknown ast attr class" + repr(value.__class__))
                 method = call[1]
-                calls[func.name].add("_".join([className, method]))
+                calls[func.name].add("_mthd_".join([className, method]))
     return calls
 
 ### ** getFunctionOrigin(functionCalls, moduleName)
 
-def getFunctionOrigin(functionCalls, moduleName) :
+def getFunctionOrigin(functionCalls, moduleName, keepOnlyFrom = None) :
     origins = dict()
     origins["built-in"] = set([])
     origins[moduleName] = set([])
@@ -95,8 +103,18 @@ def getFunctionOrigin(functionCalls, moduleName) :
     for func in allFunctions :
         if func in functionCalls.keys() :
             origins[moduleName].add(func)
+        elif "_mthd_" in func :
+            (className, method) = func.split("_mthd_")
+            origins[className] = origins.get(className, set([]))
+            origins[className].add(func)
         else :
             origins["built-in"].add(func)
+    if not keepOnlyFrom is None :
+        filteredOrigins = {}
+        for key in origins.keys() :
+            if key in keepOnlyFrom or key == moduleName :
+                filteredOrigins[key] = origins[key]
+        origins = filteredOrigins
     return origins
         
 ### ** getDotOptions(parsedArgs)
@@ -115,6 +133,7 @@ def writeDotSubgraphs(subgraphGroups, builtIn = False) :
     for cluster in subgraphGroups.keys() :
         if (cluster != "built-in" or builtIn) :
             o += "subgraph cluster" + cluster + " {\n"
+            o += "label = \"" + cluster + "\";"
             for element in subgraphGroups[cluster] :
                 o += element + ";\n"
             o += "}\n"
@@ -131,9 +150,16 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
     if not funcOrigin is None :
         # Write subgraphs
         o += writeDotSubgraphs(funcOrigin)
+        # Get names of functions in modules
+        allowedFunctions = []
+        for f in funcOrigin.values() :
+            allowedFunctions += f
+    else :
+        allowedFunctions = []    
     for caller in relations.keys() :
         for called in relations[caller] :
-            if (not onlyLocal) or (called in relations.keys()) :
+            if ((not onlyLocal) or (called in relations.keys()) or
+                (called in allowedFunctions)) :
                 o += caller + " -> " + called + ";\n"
     o += "}\n"
     return(o)
@@ -158,10 +184,16 @@ def main(args = None) :
         parsedSource = astParseFile(f)
         functionDefs = getFunctionDef(parsedSource)
         functionCalls = extractFunctionCalls(functionDefs, args.getMethods)
+        importedModules = set([])
+        print(getImportedModules(parsedSource))
+        [importedModules.add(x[0]) for x in getImportedModules(parsedSource)]
+        [importedModules.add(x[1]) for x in getImportedModules(parsedSource)]
         if (args.clusters) :
-            functionOrigins = getFunctionOrigin(functionCalls, "myModule")
+            functionOrigins = getFunctionOrigin(functionCalls, "myModule",
+                                                keepOnlyFrom = importedModules)
         else :
             functionOrigins = None
+        print(functionOrigins)
         dotOptions = getDotOptions(args)
         dotContent = makeDotFileContent(functionCalls,
                                         funcOrigin = functionOrigins,
