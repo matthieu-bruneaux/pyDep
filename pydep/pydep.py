@@ -40,7 +40,7 @@ parser.add_argument("-q", "--quickView", action = "store_true",
                     "ImageMagick and remove the dot file")
 parser.add_argument("-m", "--getMethods", action = "store_true",
                     help = "Also output method calls",
-                    default = True)
+                    default = False)
 
 ### * Functions
 
@@ -88,7 +88,8 @@ def extractFunctionCalls(functionDefs, getMethods = False) :
                 elif value.__class__ == ast.Subscript :
                     className = "dict"
                 else :
-                    raise Exception("Unknown ast attr class" + repr(value.__class__))
+                    className = "toto"
+                    # raise Exception("Unknown ast attr class" + repr(value.__class__))
                 method = call[1]
                 calls[func.name].add("_mthd_".join([className, method]))
     return calls
@@ -147,6 +148,7 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
                        onlyLocal = True) :
     o = ""
     o += "digraph G {\n"
+    o += "rankdir=LR;\n"
     if "nodeShape" in dotOptions.keys() :
         o += "node[shape=" + dotOptions["nodeShape"] + "];\n"
     if not funcOrigin is None :
