@@ -149,11 +149,44 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
     o = ""
     o += "digraph G {\n"
     o += "rankdir=LR;\n"
+    allFunctions = set()
+    if not funcOrigin is None :
+        # Get names of functions in modules
+        allowedFunctions = []
+        for f in funcOrigin.values() :
+            allowedFunctions += f
+    else :
+        allowedFunctions = []    
+    for caller in relations.keys() :
+        for called in relations[caller] :
+            if ((not onlyLocal) or (called in relations.keys()) or
+                (called in allowedFunctions)) :
+                allFunctions.add(caller)
+                allFunctions.add(called)
     if "nodeShape" in dotOptions.keys() :
-        o += "node[shape=" + dotOptions["nodeShape"] + "];\n"
+        o += ("node[shape=" + dotOptions["nodeShape"] + "," +
+              "style=filled," +
+              "color=\"" + "#dfaf8f" + "\"];\n")
+    for f in allFunctions :
+        if f.startswith("_") and not f.startswith("_main"):
+            o += f + ";\n"
+    if "nodeShape" in dotOptions.keys() :
+        o += ("node[shape=" + dotOptions["nodeShape"] + "," +
+              "style=filled," +
+              "color=\"" + "#7cb8bb" + "\"];\n")
+    for f in allFunctions :
+        if not f.startswith("_") :
+            o += f + ";\n"
+    if "nodeShape" in dotOptions.keys() :
+        o += ("node[shape=" + dotOptions["nodeShape"] + "," +
+              "style=filled," +
+              "color=\"" + "#9fc59f" + "\"];\n")
+    for f in allFunctions :
+        if f.startswith("_main") :
+            o += f + ";\n"
     if not funcOrigin is None :
         # Write subgraphs
-        o += writeDotSubgraphs(funcOrigin)
+        #o += writeDotSubgraphs(funcOrigin)
         # Get names of functions in modules
         allowedFunctions = []
         for f in funcOrigin.values() :
