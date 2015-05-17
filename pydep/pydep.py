@@ -166,21 +166,21 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
     if "nodeShape" in dotOptions.keys() :
         o += ("node[shape=" + dotOptions["nodeShape"] + "," +
               "style=filled," +
-              "color=\"" + "#dfaf8f" + "\"];\n")
+              "fillcolor=\"" + "#dfaf8f" + "\"];\n")
     for f in allFunctions :
         if f.startswith("_") and not f.startswith("_main"):
             o += f + ";\n"
     if "nodeShape" in dotOptions.keys() :
         o += ("node[shape=" + dotOptions["nodeShape"] + "," +
               "style=filled," +
-              "color=\"" + "#7cb8bb" + "\"];\n")
+              "fillcolor=\"" + "#7cb8bb" + "\"];\n")
     for f in allFunctions :
         if not f.startswith("_") :
             o += f + ";\n"
     if "nodeShape" in dotOptions.keys() :
         o += ("node[shape=" + dotOptions["nodeShape"] + "," +
               "style=filled," +
-              "color=\"" + "#9fc59f" + "\"];\n")
+              "fillcolor=\"" + "#9fc59f" + "\"];\n")
     for f in allFunctions :
         if f.startswith("_main") :
             o += f + ";\n"
