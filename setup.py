@@ -1,13 +1,11 @@
-# Written usingn resources from:
+# Written using resources from:
 # https://packaging.python.org/en/latest/distributing.html#working-in-development-mode
 # https://github.com/pypa/sampleproject/blob/master/setup.py
+# https://docs.python.org/2/distutils/examples.html
 
 from setuptools import setup
 
 setup(name = "pydep",
-      version = "0.0.2.beta",
-      packages = ["pydep"],
-      entry_points =  {
-          "console_scripts" : ["pydep = pydep:main"]
-      }
+      version = "0.0.1",
+      py_modules = ["pydep"]
 )

@@ -6,11 +6,16 @@
 Welcome to pyDep's documentation!
 =================================
 
+Description
+-----------
+
 Contents:
+---------
 
 .. toctree::
    :maxdepth: 2
 
+   modules.rst
 
 
 Indices and tables
