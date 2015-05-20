@@ -172,14 +172,15 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
     o += "}\n"
     return(o)
 
-### ** viewDotContent(inputFile)
+### ** viewDotContent(content)
 
-def viewDotContent(inputFile) :
-    commandLineDot = ["dot", "-Tpng", inputFile]
-    pDot = subprocess.Popen(commandLineDot, stdout = subprocess.PIPE)
+def viewDotContent(content) :
+    commandLineDot = ["dot", "-Tpng"]
+    pDot = subprocess.Popen(commandLineDot, stdout = subprocess.PIPE,
+                            stdin = subprocess.PIPE)
     commandLineDisplay = ["display", "-"]
     pDisplay = subprocess.Popen(commandLineDisplay, stdin = subprocess.PIPE)
-    pDisplay.communicate(input = pDot.communicate()[0])
+    pDisplay.communicate(input = pDot.communicate(content)[0])
     return pDisplay.wait()
     
 ### * Main-related functions
@@ -273,9 +274,6 @@ def _main(args = None, stdout = None, stderr = None) :
     # Main logic
     dotContent = _makeDotFromSrc(args.inputModule[0])
     if args.quickView :
-        with open("toto.temp.dot", "w") as fo :
-            fo.write(dotContent)
-        viewDotContent("toto.temp.dot")
-        os.remove("toto.temp.dot")
+        viewDotContent(dotContent)
     else :
         stdout.write(dotContent)
