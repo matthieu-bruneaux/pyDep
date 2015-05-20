@@ -172,9 +172,9 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
     o += "}\n"
     return(o)
 
-### ** viewDotFile(inputFile)
+### ** viewDotContent(inputFile)
 
-def viewDotFile(inputFile) :
+def viewDotContent(inputFile) :
     commandLineDot = ["dot", "-Tpng", inputFile]
     pDot = subprocess.Popen(commandLineDot, stdout = subprocess.PIPE)
     commandLineDisplay = ["display", "-"]
@@ -190,7 +190,7 @@ def _makeParser() :
     """Build the parser for the command-line script
 
     Returns:
-        argparse.ArgumentParser: Arugment parser object
+        argparse.ArgumentParser: Argument parser object
 
     """
     parser = argparse.ArgumentParser(
@@ -200,9 +200,9 @@ def _makeParser() :
         epilog =
         "For more information about the node options, please refer to the Dot "
         "documentation (add url here).")
-    parser.add_argument(dest = "inputModules", metavar = "MODULE.PY",
-                        nargs = "+",
-                        help = "One or several Python module files",
+    parser.add_argument(dest = "inputModule", metavar = "MODULE.PY",
+                        nargs = 1,
+                        help = "A Python module file",
                         type = str)
     parser.add_argument("-a", "--all", action = "store_true",
                         help = "Output all function calls, not only calls between "
@@ -219,6 +219,33 @@ def _makeParser() :
                         help = "Also output method calls",
                         default = False)
     return parser
+
+### ** _makeDotFromSrc(filename)
+
+def _makeDotFromSrc(filename, getMethods = False) :
+    """Prepare the dot content describing a source file dependency graph
+
+    Args:
+        filename (str): Name of the source file
+
+    Returns:
+        str: Dot content describing the dependency graph
+
+    """
+    parsedSource = astParseFile(filename)
+    functionDefs = getFunctionDef(parsedSource)
+    functionCalls = extractFunctionCalls(functionDefs)
+    importedModules = set([])
+    [importedModules.add(x[0]) for x in getImportedModules(parsedSource)]
+    [importedModules.add(x[1]) for x in getImportedModules(parsedSource)]
+    functionOrigins = getFunctionOrigin(functionCalls, "myModule",
+                                        keepOnlyFrom = importedModules)
+    dotOptions = {"nodeShape" : "box"}
+    dotContent = makeDotFileContent(functionCalls,
+                                    funcOrigin = functionOrigins,
+                                    dotOptions = dotOptions,
+                                    onlyLocal = True)
+    return dotContent
 
 ### ** _main(args = None, stdout = None, stderr = None)
 
@@ -244,28 +271,11 @@ def _main(args = None, stdout = None, stderr = None) :
     if stderr is None :
         stderr = sys.stderr
     # Main logic
-    for f in args.inputModules :
-        assert f.endswith(".py")
-        parsedSource = astParseFile(f)
-        functionDefs = getFunctionDef(parsedSource)
-        functionCalls = extractFunctionCalls(functionDefs, args.getMethods)
-        importedModules = set([])
-        [importedModules.add(x[0]) for x in getImportedModules(parsedSource)]
-        [importedModules.add(x[1]) for x in getImportedModules(parsedSource)]
-        if (args.clusters) :
-            functionOrigins = getFunctionOrigin(functionCalls, "myModule",
-                                                keepOnlyFrom = importedModules)
-        else :
-            functionOrigins = None
-        dotOptions = getDotOptions(args)
-        dotContent = makeDotFileContent(functionCalls,
-                                        funcOrigin = functionOrigins,
-                                        dotOptions = dotOptions,
-                                        onlyLocal = not args.all)
+    dotContent = _makeDotFromSrc(args.inputModule[0])
     if args.quickView :
-        with open(os.path.basename(f[:-3]) + ".graph.dot", "w") as fo :
+        with open("toto.temp.dot", "w") as fo :
             fo.write(dotContent)
-        viewDotFile(os.path.basename(f[:-3]) + ".graph.dot")
-        os.remove(os.path.basename(f[:-3]) + ".graph.dot")
+        viewDotContent("toto.temp.dot")
+        os.remove("toto.temp.dot")
     else :
         stdout.write(dotContent)
