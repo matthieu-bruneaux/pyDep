@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Unit Test Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+<style>
+body {
+    font-family: Calibri, "Trebuchet MS", sans-serif;
+}
+* {
+    word-break: break-all;
+}
+table, td, th, .dataid {
+    border: 1px solid #aaa;
+    border-collapse: collapse;
+    background: #fff;
+}
+section {
+    background: rgba(0, 0, 0, 0.05);
+    margin: 2ex;
+    padding: 1ex;
+    border: 1px solid #999;
+    border-radius: 5px;
+}
+h1 {
+    font-size: 130%;
+}
+h2 {
+    font-size: 120%;
+}
+h3 {
+    font-size: 100%;
+}
+h4 {
+    font-size: 85%;
+}
+h1, h2, h3, h4, a[href] {
+    cursor: pointer;
+    color: #0074d9;
+    text-decoration: none;
+}
+h3 strong, a.failed {
+    color: #ff4136;
+}
+a.success {
+    color: #3d9970;
+}
+pre {
+    font-family: 'Consolas', 'Deja Vu Sans Mono',
+                 'Bitstream Vera Sans Mono', 'Monaco',
+                 'Courier New', monospace;
+}
+
+.test-details,
+.traceback {
+    display: none;
+}
+section:target .test-details {
+    display: block;
+}
+
+</style>
+</head>
+<body>
+    <h1>Overview</h1>
+    <section>
+        <table>
+            <tr>
+                <th>Class</th>
+                <th>Fail</th>
+                <th>Skip</th>
+                <th>Success</th>
+                <th>Total</th>
+            </tr>
+                <tr>
+                    <td>tests.TestMain</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>tests.TestDotPreparation</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>tests.TestSourceParsing</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>10</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>tests.TestArgParser</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>8</td>
+                    <td>8</td>
+                </tr>
+            <tr>
+                <td><strong>Total</strong></td>
+                <td>5</td>
+                <td>0</td>
+                <td>21</td>
+                <td>26</td>
+            </tr>
+        </table>
+    </section>
+    <h1>Failure details</h1>
+            <section>
+                <h2>tests.TestMain (2 failures, 0 errors)</h2>
+                <div>
+                        <section id="tests.TestMain:test_main_global_fileContent">
+                            <h3>test_main_global_fileContent: <strong>exceptions.AssertionError</strong></h3>
+                            <div class="test-details">
+                                <h4>Traceback</h4>
+                                <pre class="traceback">Traceback (most recent call last):
+  File "/usr/lib/python2.7/unittest/case.py", line 332, in run
+    testMethod()
+  File "/home/matthieu/programming/python/pyDep/tests/tests.py", line 249, in test_main_global_fileContent
+    self.assertEqual(result, self.globalGraphContent)
+  File "/usr/lib/python2.7/unittest/case.py", line 516, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File "/usr/lib/python2.7/unittest/case.py", line 509, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 'digraph G {\nrankdir=LR;\nnode[shape=box,style=filled,fillcolor="#dfaf8f"];\nnode[shape=box,style=filled,fillcolor="#7cb8bb"];\nException;\nlist;\nall;\nfib;\nsensibleFib;\nmakeDNAreverseComplement;\nisValidDNAstring;\nmakeDNAcomplement;\nvalidateDNAstring;\ntype;\ntranscribeDNA;\nnode[shape=box,style=filled,fillcolor="#9fc59f"];\nfib -> fib;\nfib -> type;\nsensibleFib -> fib;\nsensibleFib -> Exception;\nmakeDNAreverseComplement -> makeDNAcomplement;\nmakeDNAreverseComplement -> validateDNAstring;\nmakeDNAreverseComplement -> list;\nisValidDNAstring -> all;\nmakeDNAcomplement -> validateDNAstring;\nvalidateDNAstring -> Exception;\nvalidateDNAstring -> isValidDNAstring;\ntranscribeDNA -> makeDNAcomplement;\ntranscribeDNA -> validateDNAstring;\n}\n' != 'digraph G {\nnode[shape=box];\nfib -> fib;\nfib -> type;\nsensibleFib -> fib;\nsensibleFib -> Exception;\nmakeDNAreverseComplement -> makeDNAcomplement;\nmakeDNAreverseComplement -> validateDNAstring;\nmakeDNAreverseComplement -> list;\nisValidDNAstring -> all;\nmakeDNAcomplement -> validateDNAstring;\nvalidateDNAstring -> Exception;\nvalidateDNAstring -> isValidDNAstring;\ntranscribeDNA -> makeDNAcomplement;\ntranscribeDNA -> validateDNAstring;\n}\n'
+</pre>
+                                <h4>Details</h4>
+                                <pre>'digraph G {\nrankdir=LR;\nnode[shape=box,style=filled,fillcolor="#dfaf8f"];\nnode[shape=box,style=filled,fillcolor="#7cb8bb"];\nException;\nlist;\nall;\nfib;\nsensibleFib;\nmakeDNAreverseComplement;\nisValidDNAstring;\nmakeDNAcomplement;\nvalidateDNAstring;\ntype;\ntranscribeDNA;\nnode[shape=box,style=filled,fillcolor="#9fc59f"];\nfib -> fib;\nfib -> type;\nsensibleFib -> fib;\nsensibleFib -> Exception;\nmakeDNAreverseComplement -> makeDNAcomplement;\nmakeDNAreverseComplement -> validateDNAstring;\nmakeDNAreverseComplement -> list;\nisValidDNAstring -> all;\nmakeDNAcomplement -> validateDNAstring;\nvalidateDNAstring -> Exception;\nvalidateDNAstring -> isValidDNAstring;\ntranscribeDNA -> makeDNAcomplement;\ntranscribeDNA -> validateDNAstring;\n}\n' != 'digraph G {\nnode[shape=box];\nfib -> fib;\nfib -> type;\nsensibleFib -> fib;\nsensibleFib -> Exception;\nmakeDNAreverseComplement -> makeDNAcomplement;\nmakeDNAreverseComplement -> validateDNAstring;\nmakeDNAreverseComplement -> list;\nisValidDNAstring -> all;\nmakeDNAcomplement -> validateDNAstring;\nvalidateDNAstring -> Exception;\nvalidateDNAstring -> isValidDNAstring;\ntranscribeDNA -> makeDNAcomplement;\ntranscribeDNA -> validateDNAstring;\n}\n'</pre>
+                            </div>
+                        </section>
+                        <section id="tests.TestMain:test_main_local_fileContent">
+                            <h3>test_main_local_fileContent: <strong>exceptions.AssertionError</strong></h3>
+                            <div class="test-details">
+                                <h4>Traceback</h4>
+                                <pre class="traceback">Traceback (most recent call last):
+  File "/usr/lib/python2.7/unittest/case.py", line 332, in run
+    testMethod()
+  File "/home/matthieu/programming/python/pyDep/tests/tests.py", line 235, in test_main_local_fileContent
+    self.assertEqual(result, self.localGraphContent)
+  File "/usr/lib/python2.7/unittest/case.py", line 516, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File "/usr/lib/python2.7/unittest/case.py", line 509, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 'digraph G {\nrankdir=LR;\nnode[shape=box,style=filled,fillcolor="#dfaf8f"];\nnode[shape=box,style=filled,fillcolor="#7cb8bb"];\nfib;\nsensibleFib;\nmakeDNAreverseComplement;\nisValidDNAstring;\nmakeDNAcomplement;\nvalidateDNAstring;\ntranscribeDNA;\nnode[shape=box,style=filled,fillcolor="#9fc59f"];\nfib -> fib;\nsensibleFib -> fib;\nmakeDNAreverseComplement -> makeDNAcomplement;\nmakeDNAreverseComplement -> validateDNAstring;\nmakeDNAcomplement -> validateDNAstring;\nvalidateDNAstring -> isValidDNAstring;\ntranscribeDNA -> makeDNAcomplement;\ntranscribeDNA -> validateDNAstring;\n}\n' != 'digraph G {\nnode[shape=box];\nfib -> fib;\nsensibleFib -> fib;\nmakeDNAreverseComplement -> makeDNAcomplement;\nmakeDNAreverseComplement -> validateDNAstring;\nmakeDNAcomplement -> validateDNAstring;\nvalidateDNAstring -> isValidDNAstring;\ntranscribeDNA -> makeDNAcomplement;\ntranscribeDNA -> validateDNAstring;\n}\n'
+</pre>
+                                <h4>Details</h4>
+                                <pre>'digraph G {\nrankdir=LR;\nnode[shape=box,style=filled,fillcolor="#dfaf8f"];\nnode[shape=box,style=filled,fillcolor="#7cb8bb"];\nfib;\nsensibleFib;\nmakeDNAreverseComplement;\nisValidDNAstring;\nmakeDNAcomplement;\nvalidateDNAstring;\ntranscribeDNA;\nnode[shape=box,style=filled,fillcolor="#9fc59f"];\nfib -> fib;\nsensibleFib -> fib;\nmakeDNAreverseComplement -> makeDNAcomplement;\nmakeDNAreverseComplement -> validateDNAstring;\nmakeDNAcomplement -> validateDNAstring;\nvalidateDNAstring -> isValidDNAstring;\ntranscribeDNA -> makeDNAcomplement;\ntranscribeDNA -> validateDNAstring;\n}\n' != 'digraph G {\nnode[shape=box];\nfib -> fib;\nsensibleFib -> fib;\nmakeDNAreverseComplement -> makeDNAcomplement;\nmakeDNAreverseComplement -> validateDNAstring;\nmakeDNAcomplement -> validateDNAstring;\nvalidateDNAstring -> isValidDNAstring;\ntranscribeDNA -> makeDNAcomplement;\ntranscribeDNA -> validateDNAstring;\n}\n'</pre>
+                            </div>
+                        </section>
+                </div>
+            </section>
+            <section>
+                <h2>tests.TestDotPreparation (3 failures, 0 errors)</h2>
+                <div>
+                        <section id="tests.TestDotPreparation:test_makeDotFileContent_global">
+                            <h3>test_makeDotFileContent_global: <strong>exceptions.AssertionError</strong></h3>
+                            <div class="test-details">
+                                <h4>Traceback</h4>
+                                <pre class="traceback">Traceback (most recent call last):
+  File "/usr/lib/python2.7/unittest/case.py", line 332, in run
+    testMethod()
+  File "/home/matthieu/programming/python/pyDep/tests/tests.py", line 185, in test_makeDotFileContent_global
+    self.assertEqual(self.dotContentGlobal, expected)
+  File "/usr/lib/python2.7/unittest/case.py", line 516, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File "/usr/lib/python2.7/unittest/case.py", line 509, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 'digraph G {\nrankdir=LR;\nf1;\nf2;\nf3;\nlen;\nf2 -> f1;\nf2 -> len;\nf3 -> f3;\n}\n' != 'digraph G {\nf2 -> f1;\nf2 -> len;\nf3 -> f3;\n}\n'
+</pre>
+                                <h4>Details</h4>
+                                <pre>'digraph G {\nrankdir=LR;\nf1;\nf2;\nf3;\nlen;\nf2 -> f1;\nf2 -> len;\nf3 -> f3;\n}\n' != 'digraph G {\nf2 -> f1;\nf2 -> len;\nf3 -> f3;\n}\n'</pre>
+                            </div>
+                        </section>
+                        <section id="tests.TestDotPreparation:test_makeDotFileContent_local">
+                            <h3>test_makeDotFileContent_local: <strong>exceptions.AssertionError</strong></h3>
+                            <div class="test-details">
+                                <h4>Traceback</h4>
+                                <pre class="traceback">Traceback (most recent call last):
+  File "/usr/lib/python2.7/unittest/case.py", line 332, in run
+    testMethod()
+  File "/home/matthieu/programming/python/pyDep/tests/tests.py", line 181, in test_makeDotFileContent_local
+    self.assertEqual(self.dotContentLocal, expected)
+  File "/usr/lib/python2.7/unittest/case.py", line 516, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File "/usr/lib/python2.7/unittest/case.py", line 509, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 'digraph G {\nrankdir=LR;\nf1;\nf2;\nf3;\nf2 -> f1;\nf3 -> f3;\n}\n' != 'digraph G {\nf2 -> f1;\nf3 -> f3;\n}\n'
+</pre>
+                                <h4>Details</h4>
+                                <pre>'digraph G {\nrankdir=LR;\nf1;\nf2;\nf3;\nf2 -> f1;\nf3 -> f3;\n}\n' != 'digraph G {\nf2 -> f1;\nf3 -> f3;\n}\n'</pre>
+                            </div>
+                        </section>
+                        <section id="tests.TestDotPreparation:test_makeDotFileContent_nodeShape">
+                            <h3>test_makeDotFileContent_nodeShape: <strong>exceptions.AssertionError</strong></h3>
+                            <div class="test-details">
+                                <h4>Traceback</h4>
+                                <pre class="traceback">Traceback (most recent call last):
+  File "/usr/lib/python2.7/unittest/case.py", line 332, in run
+    testMethod()
+  File "/home/matthieu/programming/python/pyDep/tests/tests.py", line 189, in test_makeDotFileContent_nodeShape
+    self.assertEqual(self.dotContentLocalBox, expected)
+  File "/usr/lib/python2.7/unittest/case.py", line 516, in assertEqual
+    assertion_func(first, second, msg=msg)
+  File "/usr/lib/python2.7/unittest/case.py", line 509, in _baseAssertEqual
+    raise self.failureException(msg)
+AssertionError: 'digraph G {\nrankdir=LR;\nnode[shape=circle,style=filled,fillcolor="#dfaf8f"];\nnode[shape=circle,style=filled,fillcolor="#7cb8bb"];\nf1;\nf2;\nf3;\nnode[shape=circle,style=filled,fillcolor="#9fc59f"];\nf2 -> f1;\nf3 -> f3;\n}\n' != 'digraph G {\nnode[shape=circle];\nf2 -> f1;\nf3 -> f3;\n}\n'
+</pre>
+                                <h4>Details</h4>
+                                <pre>'digraph G {\nrankdir=LR;\nnode[shape=circle,style=filled,fillcolor="#dfaf8f"];\nnode[shape=circle,style=filled,fillcolor="#7cb8bb"];\nf1;\nf2;\nf3;\nnode[shape=circle,style=filled,fillcolor="#9fc59f"];\nf2 -> f1;\nf3 -> f3;\n}\n' != 'digraph G {\nnode[shape=circle];\nf2 -> f1;\nf3 -> f3;\n}\n'</pre>
+                            </div>
+                        </section>
+                </div>
+            </section>
+
+    <h1>All tests</h1>
+    <section>
+        <h2>tests.TestMain (2 failures, 0 errors)</h2>
+        <ul>
+                <li><a class="failed" href="#tests.TestMain:test_main_global_fileContent">test_main_global_fileContent</a></li>
+                <li><a class="success">test_main_global_fileExists</a></li>
+                <li><a class="failed" href="#tests.TestMain:test_main_local_fileContent">test_main_local_fileContent</a></li>
+                <li><a class="success">test_main_local_fileExists</a></li>
+        </ul>
+    </section>
+    <section>
+        <h2>tests.TestDotPreparation (3 failures, 0 errors)</h2>
+        <ul>
+                <li><a class="success">test_getDotOptions_nodeShape</a></li>
+                <li><a class="failed" href="#tests.TestDotPreparation:test_makeDotFileContent_global">test_makeDotFileContent_global</a></li>
+                <li><a class="failed" href="#tests.TestDotPreparation:test_makeDotFileContent_local">test_makeDotFileContent_local</a></li>
+                <li><a class="failed" href="#tests.TestDotPreparation:test_makeDotFileContent_nodeShape">test_makeDotFileContent_nodeShape</a></li>
+        </ul>
+    </section>
+    <section>
+        <h2>tests.TestSourceParsing (0 failures, 0 errors)</h2>
+        <ul>
+                <li><a class="success">test_astParseFile_lenModuleBody</a></li>
+                <li><a class="success">test_astParseFile_returnAstModule</a></li>
+                <li><a class="success">test_extractFunctionCalls_fib_calls</a></li>
+                <li><a class="success">test_extractFunctionCalls_lenReturn</a></li>
+                <li><a class="success">test_extractFunctionCalls_simpleFunc_calls</a></li>
+                <li><a class="success">test_extractFunctionCalls_transcribeDNA_calls</a></li>
+                <li><a class="success">test_extractFunctionCalls_typeReturn</a></li>
+                <li><a class="success">test_getFunctionDef_elementName</a></li>
+                <li><a class="success">test_getFunctionDef_lenReturn</a></li>
+                <li><a class="success">test_getFunctionDef_returnClasses</a></li>
+        </ul>
+    </section>
+    <section>
+        <h2>tests.TestArgParser (0 failures, 0 errors)</h2>
+        <ul>
+                <li><a class="success">test_inputFiles_missing</a></li>
+                <li><a class="success">test_inputFiles_multiple</a></li>
+                <li><a class="success">test_inputFiles_one</a></li>
+                <li><a class="success">test_option_all_False</a></li>
+                <li><a class="success">test_option_all_True</a></li>
+                <li><a class="success">test_option_nodeShape_circle</a></li>
+                <li><a class="success">test_option_nodeShape_default</a></li>
+                <li><a class="success">test_option_nodeShape_missing</a></li>
+        </ul>
+    </section>
+</body>
+<script>
+    Array.prototype.forEach.call(document.querySelectorAll('h1, h2, h3, h4'), function(el) {
+        el.addEventListener('click', function() {
+            el.nextElementSibling.style.display = document.defaultView.getComputedStyle(el.nextElementSibling).display == 'none' ? 'block' : 'none';
+        })
+    })
+</script>
+</html>
