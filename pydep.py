@@ -6,41 +6,11 @@
 
 ### ** Import
 
-### ** Built-in modules
-
 import sys
 import os
 import ast
 import argparse
 import subprocess
-
-### ** Argument parser
-
-parser = argparse.ArgumentParser(
-    description =
-    "Produce a dependency graph between functions within a module. The output "
-    "is a dot file to be processed with graphviz.",
-    epilog =
-    "For more information about the node options, please refer to the Dot "
-    "documentation (add url here).")
-parser.add_argument(dest = "inputModules", metavar = "MODULE.PY",
-                    nargs = "+",
-                    help = "One or several Python module files",
-                    type = str)
-parser.add_argument("-a", "--all", action = "store_true",
-                    help = "Output all function calls, not only calls between "
-                    "functions of the module")
-parser.add_argument("--nodeShape", type = str, default = "box",
-                    help = "Node shape (default: box)")
-parser.add_argument("--clusters", action = "store_true",
-                    help = "Group the functions by their module of origin",
-                    default = True)
-parser.add_argument("-q", "--quickView", action = "store_true",
-                    help = "Provide a simple display of the dot file through "
-                    "ImageMagick and remove the dot file")
-parser.add_argument("-m", "--getMethods", action = "store_true",
-                    help = "Also output method calls",
-                    default = False)
 
 ### * Functions
 
@@ -212,11 +182,68 @@ def viewDotFile(inputFile) :
     pDisplay.communicate(input = pDot.communicate()[0])
     return pDisplay.wait()
     
-### * main()
+### * Main-related functions
 
-def main(args = None) :
+### ** _makeParser()
+
+def _makeParser() :
+    """Build the parser for the command-line script
+
+    Returns:
+        argparse.ArgumentParser: Arugment parser object
+
+    """
+    parser = argparse.ArgumentParser(
+        description =
+        "Produce a dependency graph between functions within a module. The output "
+        "is a dot file to be processed with graphviz.",
+        epilog =
+        "For more information about the node options, please refer to the Dot "
+        "documentation (add url here).")
+    parser.add_argument(dest = "inputModules", metavar = "MODULE.PY",
+                        nargs = "+",
+                        help = "One or several Python module files",
+                        type = str)
+    parser.add_argument("-a", "--all", action = "store_true",
+                        help = "Output all function calls, not only calls between "
+                        "functions of the module")
+    parser.add_argument("--nodeShape", type = str, default = "box",
+                        help = "Node shape (default: box)")
+    parser.add_argument("--clusters", action = "store_true",
+                        help = "Group the functions by their module of origin",
+                        default = True)
+    parser.add_argument("-q", "--quickView", action = "store_true",
+                        help = "Provide a simple display of the dot file through "
+                        "ImageMagick and remove the dot file")
+    parser.add_argument("-m", "--getMethods", action = "store_true",
+                        help = "Also output method calls",
+                        default = False)
+    return parser
+
+### ** _main(args = None, stdout = None, stderr = None)
+
+def _main(args = None, stdout = None, stderr = None) :
+    """Main function, entry point for the command line script
+
+    Args:
+        args (list): List of command line arguments. If None, the arguments are 
+          taken from the command line
+        stdout (file): stdout stream. If None, use sys.stdout
+        stderr (file): stderr stream. If None, use sys.stderr
+    
+    """
+    # Argument parser
+    parser = _makeParser()
     if args is None :
         args = parser.parse_args()
+    else :
+        args = parser.parse_args(args)
+    # Streams
+    if stdout is None :
+        stdout = sys.stdout
+    if stderr is None :
+        stderr = sys.stderr
+    # Main logic
     for f in args.inputModules :
         assert f.endswith(".py")
         parsedSource = astParseFile(f)
@@ -235,13 +262,10 @@ def main(args = None) :
                                         funcOrigin = functionOrigins,
                                         dotOptions = dotOptions,
                                         onlyLocal = not args.all)
+    if args.quickView :
         with open(os.path.basename(f[:-3]) + ".graph.dot", "w") as fo :
             fo.write(dotContent)
-    if args.quickView :
         viewDotFile(os.path.basename(f[:-3]) + ".graph.dot")
         os.remove(os.path.basename(f[:-3]) + ".graph.dot")
-
-### * run
-
-if (__name__ == "__main__") :
-    main()
+    else :
+        stdout.write(dotContent)

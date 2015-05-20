@@ -7,5 +7,10 @@ from setuptools import setup
 
 setup(name = "pydep",
       version = "0.0.1",
-      py_modules = ["pydep"]
+      py_modules = ["pydep"],
+      entry_points = {
+          "console_scripts" : [
+              "pydep=pydep:_main"
+          ]
+      }
 )
