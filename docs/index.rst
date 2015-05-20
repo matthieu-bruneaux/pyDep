@@ -9,14 +9,8 @@ Welcome to pyDep's documentation!
 Description
 -----------
 
-Contents:
----------
-
-.. toctree::
-   :maxdepth: 2
-
-   modules.rst
-
+This is a module to produce a dependency graph of functions within a Python
+module.
 
 Indices and tables
 ==================

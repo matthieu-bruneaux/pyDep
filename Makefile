@@ -58,7 +58,7 @@ test:
 ### ** doc
 docs: doc
 doc:
-	sphinx-apidoc -o $(SPHINX_DOC_FOLDER) $(PYTHON_MODULE)/
+	sphinx-apidoc -o $(SPHINX_DOC_FOLDER) ./ setup.py
 	cd $(SPHINX_DOC_FOLDER); make html
 	@echo -e "\nThe documentation is accessible from $(SPHINX_DOC_FOLDER)_build/html/index.html"
 

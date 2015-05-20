@@ -1,20 +1,5 @@
-pydep package
-=============
-
-Submodules
-----------
-
-pydep.pydep module
-------------------
-
-.. automodule:: pydep.pydep
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
+pydep module
+============
 
 .. automodule:: pydep
     :members:
