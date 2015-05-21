@@ -1,4 +1,4 @@
-[[https://travis-ci.org/matthieu-bruneaux/pydep.svg?branch=master]]
+[[https://travis-ci.org/matthieu-bruneaux/pydep/builds][https://travis-ci.org/matthieu-bruneaux/pydep.svg?branch=master]]
 
 * Description
 
