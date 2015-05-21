@@ -17,13 +17,22 @@ import subprocess
 ### ** astParseFile(sourceFileName)
 
 def astParseFile(sourceFileName) :
+    """Parse a source file using the ``ast`` module
+    
+    Args:
+        sourceFileName (str): Name of the source file to parse
+
+    Returns:
+        ast.Module: Output from ``ast.parse`` (ast.Module object)
+
+    """
     with open(sourceFileName, "r") as fi :
         source = fi.read()
     return(ast.parse(source))
 
-### ** getImportedModules(astParsedSource)
+### ** _getImportedModules(astParsedSource)
 
-def getImportedModules(astParsedSource) :
+def _getImportedModules(astParsedSource) :
     importFromStatements = [(x.names[0].name, x.names[0].asname)
                             for x in astParsedSource.body if x.__class__ == ast.ImportFrom]
     importStatements = [(x.names[0].name, x.names[0].asname)
@@ -33,64 +42,79 @@ def getImportedModules(astParsedSource) :
 ### ** getFunctionDef(astParsedSource)
 
 def getFunctionDef(astParsedSource) :
+    """Extract the function definitions from a parsed source file
+
+    Args:
+        astParsedSource (ast.Module): Parsed source, output from 
+          :func:`astParseFile`
+
+    Returns :
+        list of ast.FunctionDef: List of the function definitions 
+          (``ast.FunctionDef`` objects)
+
+    """
     return([x for x in astParsedSource.body if x.__class__ == ast.FunctionDef])
 
-### ** extractFunctionCalls(functionDefs)
+### ** _getFunctionCallsFromOne(astFunctionDef)
 
-def extractFunctionCalls(functionDefs, getMethods = False) :
-    calls = dict()
-    for func in functionDefs :
-        calls[func.name] = calls.get(func.name, set([]))
-        callsByFunc = [x for x in ast.walk(func)
-                       if x.__class__ == ast.Call]
-        calledFunctions = [x.func.id for x in callsByFunc
-                           if x.func.__class__ == ast.Name]
-        calledMethods = [(x.func.value, x.func.attr) for x in callsByFunc
-                         if x.func.__class__ == ast.Attribute]
-        for call in calledFunctions :
-            calls[func.name].add(call)
-        if getMethods :
-            for call in calledMethods :
-                value = call[0]
-                if value.__class__ == ast.Name :
-                    className = value.id
-                elif value.__class__ == ast.Str :
-                    className = "str"
-                elif value.__class__ == ast.Subscript :
-                    className = "dict"
-                else :
-                    className = "toto"
-                    # raise Exception("Unknown ast attr class" + repr(value.__class__))
-                method = call[1]
-                calls[func.name].add("_mthd_".join([className, method]))
-    return calls
+def _getFunctionCallsFromOne(astFunctionDef) :
+    """Extract the function calls from a function definition
 
-### ** getFunctionOrigin(functionCalls, moduleName)
+    Args:
+        astFunctionDef (ast.FunctionDef): Function definition, 
+          ``ast.FunctionDef`` object
 
-def getFunctionOrigin(functionCalls, moduleName, keepOnlyFrom = None) :
-    origins = dict()
-    origins["built-in"] = set([])
-    origins[moduleName] = set([])
-    allFunctions = functionCalls.keys()
-    for x in functionCalls.values() :
-        allFunctions += list(x)
-    for func in allFunctions :
-        if func in functionCalls.keys() :
-            origins[moduleName].add(func)
-        elif "_mthd_" in func :
-            (className, method) = func.split("_mthd_")
-            origins[className] = origins.get(className, set([]))
-            origins[className].add(func)
-        else :
-            origins["built-in"].add(func)
-    if not keepOnlyFrom is None :
-        filteredOrigins = {}
-        for key in origins.keys() :
-            if key in keepOnlyFrom or key == moduleName :
-                filteredOrigins[key] = origins[key]
-        origins = filteredOrigins
-    return origins
-        
+    Returns:
+        list: List of (unique) functions called in the function definition
+
+    """
+    calls = [x for x in ast.walk(astFunctionDef) if x.__class__ == ast.Call]
+    calledFunctions = set([x.func.id for x in calls if x.func.__class__ == ast.Name])
+    return list(calledFunctions)
+
+### ** getFunctionCalls(listFuncDef)
+
+def getFunctionCalls(listFuncDef) :
+    """Extract the function calls from a list of function definitions, and 
+    return them in a dictionary
+
+    Args:
+        listFuncDef (list of ast.FunctionDef): List of function definitions
+          (such as returned by :func:`getFunctionDef`)
+
+    Returns:
+        dict: Dictionary mapping function names (str) and the functions they 
+          call (list of str)
+
+    """
+    o = dict()
+    for f in listFuncDef :
+        assert f.name not in o.keys()
+        o[f.name] = _getFunctionCallsFromOne(f)
+    return o
+
+### ** filterLocalCalls(funcCallDict)
+
+def filterLocalCalls(funcCallDict) :
+    """Filter a dictionary of function calls to keep only functions which are 
+    defined locally. This is done by filtering the values of the dictionary 
+    (lists) and keeping only in those lists function names which are present
+    in the keys of the dictionary.
+
+    Args:
+        funcCallDict (dict): Function calls dictionary, output from
+          :func:`getFunctionCalls`
+
+    Returns:
+        dict: A copy of the input dictionary, with the value lists filtered to
+          keep only function names present in the keys
+
+    """
+    o = funcCallDict.copy()
+    for k in o.keys() :
+        o[k] = [x for x in o[k] if x in o.keys()]
+    return o
+
 ### ** getDotOptions(parsedArgs)
 
 def getDotOptions(parsedArgs) :
@@ -113,27 +137,20 @@ def writeDotSubgraphs(subgraphGroups, builtIn = False) :
             o += "}\n"
     return o
         
-### ** makeDotFileContent(relations, onlyLocal)
+### ** makeDotFileContent(relations, dotOptions)
 
-def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
-                       onlyLocal = True) :
+def makeDotFileContent(relations, dotOptions = None) :
+    if dotOptions is None :
+        dotOptions = dict()
     o = ""
     o += "digraph G {\n"
     o += "rankdir=LR;\n"
     allFunctions = set()
-    if not funcOrigin is None :
-        # Get names of functions in modules
-        allowedFunctions = []
-        for f in funcOrigin.values() :
-            allowedFunctions += f
-    else :
-        allowedFunctions = []    
+    allowedFunctions = []    
     for caller in relations.keys() :
         for called in relations[caller] :
-            if ((not onlyLocal) or (called in relations.keys()) or
-                (called in allowedFunctions)) :
-                allFunctions.add(caller)
-                allFunctions.add(called)
+            allFunctions.add(caller)
+            allFunctions.add(called)
     if "nodeShape" in dotOptions.keys() :
         o += ("node[shape=" + dotOptions["nodeShape"] + "," +
               "style=filled," +
@@ -155,20 +172,9 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
     for f in allFunctions :
         if f.startswith("_main") :
             o += f + ";\n"
-    if not funcOrigin is None :
-        # Write subgraphs
-        #o += writeDotSubgraphs(funcOrigin)
-        # Get names of functions in modules
-        allowedFunctions = []
-        for f in funcOrigin.values() :
-            allowedFunctions += f
-    else :
-        allowedFunctions = []    
     for caller in relations.keys() :
         for called in relations[caller] :
-            if ((not onlyLocal) or (called in relations.keys()) or
-                (called in allowedFunctions)) :
-                o += caller + " -> " + called + ";\n"
+            o += caller + " -> " + called + ";\n"
     o += "}\n"
     return(o)
 
@@ -235,17 +241,10 @@ def makeDotFromSrc(filename, getMethods = False) :
     """
     parsedSource = astParseFile(filename)
     functionDefs = getFunctionDef(parsedSource)
-    functionCalls = extractFunctionCalls(functionDefs)
-    importedModules = set([])
-    [importedModules.add(x[0]) for x in getImportedModules(parsedSource)]
-    [importedModules.add(x[1]) for x in getImportedModules(parsedSource)]
-    functionOrigins = getFunctionOrigin(functionCalls, "myModule",
-                                        keepOnlyFrom = importedModules)
+    functionCalls = filterLocalCalls(getFunctionCalls(functionDefs))
     dotOptions = {"nodeShape" : "box"}
     dotContent = makeDotFileContent(functionCalls,
-                                    funcOrigin = functionOrigins,
-                                    dotOptions = dotOptions,
-                                    onlyLocal = True)
+                                    dotOptions = dotOptions)
     return dotContent
 
 ### * Main-related functions
