@@ -21,14 +21,18 @@ import sys
 sys.path.append("..")
 import os
 import StringIO
+import ast
 import pydep as mod
 
 ### ** Parameters
 
+# This section should be updated according to the test module file.
+
 MY_TEST_MODULE = "inputFiles/exampleModule.py"
 if not os.path.isfile(MY_TEST_MODULE) :
     MY_TEST_MODULE = os.path.join("tests", MY_TEST_MODULE)
-
+MTM_BODY_LENGTH = 9
+    
 ### * Run
 
 ### ** class TestMakeParser
@@ -103,7 +107,28 @@ class TestMakeParser(unittest.TestCase) :
                  result.nodeShape == "circle" and
                  result.inputModule[0] == "toto.py")
         self.assertTrue(check)
-        
+
+### ** class TestAstParseFile
+
+class TestAstParseFile(unittest.TestCase) :
+
+### *** setUp and tearDown
+
+    def setUp(self) :
+        self.astParsedSource = mod.astParseFile(MY_TEST_MODULE)
+
+### *** Test
+
+    def test_output_class(self) :
+        outputClass = self.astParsedSource.__class__
+        expected = ast.Module
+        self.assertEqual(outputClass, expected)
+
+    def test_output_body_length(self) :
+        body = self.astParsedSource.body
+        expected = MTM_BODY_LENGTH
+        self.assertEqual(len(body), expected)
+
 # ### ** class TestSourceParsing
 
 # class TestSourceParsing(unittest.TestCase) :
