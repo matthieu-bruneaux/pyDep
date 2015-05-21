@@ -1,6 +1,4 @@
-[[https://travis-ci.org/matthieu-bruneaux/pydep/builds][https://travis-ci.org/matthieu-bruneaux/pydep.svg?branch=master]]
-
-[[https://coveralls.io/r/matthieu-bruneaux/pydep][https://coveralls.io/repos/matthieu-bruneaux/pydep/badge.svg]]
+[[https://travis-ci.org/matthieu-bruneaux/pydep?branch%3Dmaster][https://travis-ci.org/matthieu-bruneaux/pydep.svg?branch=master]] [[https://coveralls.io/r/matthieu-bruneaux/pydep?branch%3Dmaster][https://coveralls.io/repos/matthieu-bruneaux/pydep/badge.svg?branch=master]]
 
 * Description
 
