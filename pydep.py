@@ -145,6 +145,7 @@ def makeDotFileContent(relations, dotOptions = None) :
     o = ""
     o += "digraph G {\n"
     o += "rankdir=LR;\n"
+    o += "subgraph cluster_1 {\n"
     allFunctions = set()
     allowedFunctions = []    
     for caller in relations.keys() :
@@ -175,6 +176,7 @@ def makeDotFileContent(relations, dotOptions = None) :
     for caller in relations.keys() :
         for called in relations[caller] :
             o += caller + " -> " + called + ";\n"
+    o += "}\n"        
     o += "}\n"
     return(o)
 
