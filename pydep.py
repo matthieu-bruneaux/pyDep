@@ -48,7 +48,7 @@ def getFunctionDef(astParsedSource) :
         astParsedSource (ast.Module): Parsed source, output from 
           :func:`astParseFile`
 
-    Returns :
+    Returns:
         list of ast.FunctionDef: List of the function definitions 
           (``ast.FunctionDef`` objects)
 
