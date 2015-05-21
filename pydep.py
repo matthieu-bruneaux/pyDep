@@ -220,6 +220,34 @@ def _is_available(program) :
             return False
     return True
 
+
+### ** makeDotFromSrc(filename)
+
+def makeDotFromSrc(filename, getMethods = False) :
+    """Prepare the dot content describing a source file dependency graph
+
+    Args:
+        filename (str): Name of the source file
+
+    Returns:
+        str: Dot content describing the dependency graph
+
+    """
+    parsedSource = astParseFile(filename)
+    functionDefs = getFunctionDef(parsedSource)
+    functionCalls = extractFunctionCalls(functionDefs)
+    importedModules = set([])
+    [importedModules.add(x[0]) for x in getImportedModules(parsedSource)]
+    [importedModules.add(x[1]) for x in getImportedModules(parsedSource)]
+    functionOrigins = getFunctionOrigin(functionCalls, "myModule",
+                                        keepOnlyFrom = importedModules)
+    dotOptions = {"nodeShape" : "box"}
+    dotContent = makeDotFileContent(functionCalls,
+                                    funcOrigin = functionOrigins,
+                                    dotOptions = dotOptions,
+                                    onlyLocal = True)
+    return dotContent
+
 ### * Main-related functions
 
 ### ** _makeParser()
@@ -258,33 +286,6 @@ def _makeParser() :
     #                     default = True)
     return parser
 
-### ** _makeDotFromSrc(filename)
-
-def _makeDotFromSrc(filename, getMethods = False) :
-    """Prepare the dot content describing a source file dependency graph
-
-    Args:
-        filename (str): Name of the source file
-
-    Returns:
-        str: Dot content describing the dependency graph
-
-    """
-    parsedSource = astParseFile(filename)
-    functionDefs = getFunctionDef(parsedSource)
-    functionCalls = extractFunctionCalls(functionDefs)
-    importedModules = set([])
-    [importedModules.add(x[0]) for x in getImportedModules(parsedSource)]
-    [importedModules.add(x[1]) for x in getImportedModules(parsedSource)]
-    functionOrigins = getFunctionOrigin(functionCalls, "myModule",
-                                        keepOnlyFrom = importedModules)
-    dotOptions = {"nodeShape" : "box"}
-    dotContent = makeDotFileContent(functionCalls,
-                                    funcOrigin = functionOrigins,
-                                    dotOptions = dotOptions,
-                                    onlyLocal = True)
-    return dotContent
-
 ### ** _main(args = None, stdout = None, stderr = None)
 
 def _main(args = None, stdout = None, stderr = None) :
@@ -309,7 +310,7 @@ def _main(args = None, stdout = None, stderr = None) :
     if stderr is None :
         stderr = sys.stderr
     # Main logic
-    dotContent = _makeDotFromSrc(args.inputModule[0])
+    dotContent = makeDotFromSrc(args.inputModule[0])
     if args.quickView :
         viewDotContent(dotContent)
     else :
