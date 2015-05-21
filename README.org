@@ -1,5 +1,7 @@
 [[https://travis-ci.org/matthieu-bruneaux/pydep/builds][https://travis-ci.org/matthieu-bruneaux/pydep.svg?branch=master]]
 
+[[https://coveralls.io/r/matthieu-bruneaux/pydep][https://coveralls.io/repos/matthieu-bruneaux/pydep/badge.svg]]
+
 * Description
 
 Python utility to produce *a simple graph of the dependencies between
