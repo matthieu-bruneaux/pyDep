@@ -3,8 +3,8 @@ language: python
 python:
   - "2.7"
 
-install: pip install coveralls nosetests	
+install: pip install coveralls	
 
 script: nosetests tests/ --with-coverage --cover-package=pydep
 
-after: coveralls
+after_success: coveralls
