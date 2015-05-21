@@ -242,20 +242,20 @@ def _makeParser() :
                         nargs = 1,
                         help = "A Python module file",
                         type = str)
-    parser.add_argument("-a", "--all", action = "store_true",
-                        help = "Output all function calls, not only calls between "
-                        "functions of the module")
     parser.add_argument("--nodeShape", type = str, default = "box",
                         help = "Node shape (default: box)")
-    parser.add_argument("--clusters", action = "store_true",
-                        help = "Group the functions by their module of origin",
-                        default = True)
     parser.add_argument("-q", "--quickView", action = "store_true",
                         help = "Provide a simple display of the dot file through "
                         "ImageMagick and remove the dot file")
-    parser.add_argument("-m", "--getMethods", action = "store_true",
-                        help = "Also output method calls",
-                        default = False)
+    # parser.add_argument("-m", "--getMethods", action = "store_true",
+    #                     help = "Also output method calls",
+    #                     default = False)
+    # parser.add_argument("-a", "--all", action = "store_true",
+    #                     help = "Output all function calls, not only calls between "
+    #                     "functions of the module")
+    # parser.add_argument("--clusters", action = "store_true",
+    #                     help = "Group the functions by their module of origin",
+    #                     default = True)
     return parser
 
 ### ** _makeDotFromSrc(filename)
