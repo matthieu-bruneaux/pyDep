@@ -1,9 +1,3 @@
-dependencies.dot
-toto.pdf
-*.png
-*.dot
-*.pyc
-*.pdf
-.coverage
-cover/*
 pydep.egg-info/*
+docs/_build/*
+*.pyc
