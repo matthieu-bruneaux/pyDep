@@ -31,9 +31,9 @@ if not os.path.isfile(MY_TEST_MODULE) :
 
 ### * Run
 
-### ** class TestArgParser
+### ** class TestMakeParser
 
-class TestArgParser(unittest.TestCase) :
+class TestMakeParser(unittest.TestCase) :
 
 ### *** setUp and TearDown
 
@@ -48,35 +48,62 @@ class TestArgParser(unittest.TestCase) :
         sys.stderr.close()
         sys.stderr = self.stderr
 
-### *** test_inputFiles
+### *** test_inputModule
 
-    def test_inputFiles_missing(self) :
+    def test_inputModule_missing(self) :
         commandLine = []
         with self.assertRaises(SystemExit) :
             self.parser.parse_args(commandLine)
 
-    def test_inputFiles_one(self) :
+    def test_inputModule_one(self) :
         commandLine = ["myMod01.py"]
         result = self.parser.parse_args(commandLine)
         self.assertEqual(result.inputModule, ["myMod01.py"])
-            
-### *** test_option_nodeShape
 
-    def test_option_nodeShape_default(self) :
+    def test_inputModule_two(self) :
+        commandLine = ["myMod01.py", "myModTooMuch.py"]
+        with self.assertRaises(SystemExit) :
+            result = self.parser.parse_args(commandLine)
+                    
+### *** test_nodeShape
+
+    def test_nodeShape_default(self) :
         commandLine = ["myMod01.py"]
         result = self.parser.parse_args(commandLine)
         self.assertEqual(result.nodeShape, "box")
 
-    def test_option_nodeShape_circle(self) :
+    def test_nodeShape_circle(self) :
         commandLine = ["myMod01.py", "--nodeShape", "circle"]
         result = self.parser.parse_args(commandLine)
         self.assertEqual(result.nodeShape, "circle")
 
-    def test_option_nodeShape_missing(self) :
+    def test_nodeShape_missing(self) :
         commandLine = ["myMod01.py", "--nodeShape"]
         with self.assertRaises(SystemExit) :
             result = self.parser.parse_args(commandLine)
 
+### *** test_quickView
+
+    def test_quickView_default(self) :
+        commandLine = ["myMod01.py"]
+        result = self.parser.parse_args(commandLine)
+        self.assertFalse(result.quickView)
+
+    def test_quickView_true(self) :
+        commandLine = ["myMod01.py", "-q"]
+        result = self.parser.parse_args(commandLine)
+        self.assertTrue(result.quickView)
+
+### *** test_combination
+
+    def test_combination_000(self) :
+        commandLine = ["-q", "--nodeShape", "circle", "toto.py"]
+        result = self.parser.parse_args(commandLine)
+        check = (result.quickView == True and
+                 result.nodeShape == "circle" and
+                 result.inputModule[0] == "toto.py")
+        self.assertTrue(check)
+        
 # ### ** class TestSourceParsing
 
 # class TestSourceParsing(unittest.TestCase) :
