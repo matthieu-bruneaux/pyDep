@@ -175,6 +175,18 @@ def makeDotFileContent(relations, funcOrigin = None, dotOptions = dict(),
 ### ** viewDotContent(content)
 
 def viewDotContent(content) :
+    """Display the rendered graph from a dot content, using ``ImageMagick``. 
+    ``Dot`` and ``ImageMagick`` should be installed for this to work.
+
+    Args:
+        content (str): Dot content to be rendered
+
+    Returns:
+        subprocess returncode: The returned value from the ``display`` process.
+
+    """
+    if not (_is_available("dot") and _is_available("display")) :
+        raise Exception("Dot or ImageMagick is missing, cannot display the graph")
     commandLineDot = ["dot", "-Tpng"]
     pDot = subprocess.Popen(commandLineDot, stdout = subprocess.PIPE,
                             stdin = subprocess.PIPE)
@@ -182,7 +194,32 @@ def viewDotContent(content) :
     pDisplay = subprocess.Popen(commandLineDisplay, stdin = subprocess.PIPE)
     pDisplay.communicate(input = pDot.communicate(content)[0])
     return pDisplay.wait()
-    
+
+### ** _is_available(program)
+
+def _is_available(program) :
+    """Function to test if a program can be called from Python. Based on a post
+    from stackoverflow: http://stackoverflow.com/questions/11210104/check-if-a-program-exists-from-a-python-script
+    The function tries to execute: program --help.
+
+    Args:
+        program (str): Command to call the program to be tested
+
+    Returns:
+        boolean
+
+    """
+    try:
+        devnull = open(os.devnull, "w")
+        a = subprocess.Popen([program, "--help"], stdout = devnull,
+                         stderr = devnull)
+        a.communicate()
+        a.wait()
+    except OSError as e:
+        if e.errno == os.errno.ENOENT:
+            return False
+    return True
+
 ### * Main-related functions
 
 ### ** _makeParser()
