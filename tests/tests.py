@@ -32,7 +32,8 @@ MY_TEST_MODULE = "inputFiles/exampleModule.py"
 if not os.path.isfile(MY_TEST_MODULE) :
     MY_TEST_MODULE = os.path.join("tests", MY_TEST_MODULE)
 MTM_BODY_LENGTH = 9
-    
+MTM_N_FUNCDEFS = 9
+
 ### * Run
 
 ### ** class TestMakeParser
@@ -129,6 +130,28 @@ class TestAstParseFile(unittest.TestCase) :
         expected = MTM_BODY_LENGTH
         self.assertEqual(len(body), expected)
 
+### ** class TestGetFunctionDef
+
+class TestGetFunctionDef(unittest.TestCase) :
+
+### *** setUp and tearDown
+
+    def setUp(self) :
+        self.astSource = mod.astParseFile(MY_TEST_MODULE)
+
+
+### *** Test
+
+    def test_only_function_defs(self) :
+        funcDefs = mod.getFunctionDef(self.astSource)
+        check = [x.__class__ == ast.FunctionDef for x in funcDefs]
+        self.assertTrue(all(check))
+
+    def test_number_function_defs(self) :
+        funcDefs = mod.getFunctionDef(self.astSource)
+        expected = MTM_N_FUNCDEFS
+        self.assertEqual(len(funcDefs), expected)
+        
 # ### ** class TestSourceParsing
 
 # class TestSourceParsing(unittest.TestCase) :
