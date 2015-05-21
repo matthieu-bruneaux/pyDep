@@ -33,6 +33,7 @@ if not os.path.isfile(MY_TEST_MODULE) :
     MY_TEST_MODULE = os.path.join("tests", MY_TEST_MODULE)
 MTM_BODY_LENGTH = 9
 MTM_N_FUNCDEFS = 9
+MTM_N_CALLS = [2, 2, 1, 3, 2, 1, 2, 0, 0]
 
 ### * Run
 
@@ -151,6 +152,23 @@ class TestGetFunctionDef(unittest.TestCase) :
         funcDefs = mod.getFunctionDef(self.astSource)
         expected = MTM_N_FUNCDEFS
         self.assertEqual(len(funcDefs), expected)
+
+### ** class TestGetFunctionCallsFromOne
+
+class TestGetFunctionCallsFromOne(unittest.TestCase) :
+
+### *** setUp and tearDown
+
+    def setUp(self) :
+        self.astSource = mod.astParseFile(MY_TEST_MODULE)
+
+### *** Test
+
+    def test_number_calls(self) :
+        result = [len(mod._getFunctionCallsFromOne(x))
+                  for x in self.astSource.body]
+        expected = MTM_N_CALLS
+        self.assertListEqual(result, expected)
         
 # ### ** class TestSourceParsing
 
