@@ -7,11 +7,11 @@ functions* in a Python module.
 
 This is a simple home-made project, the aim of which is to teach myself how to
 do this kind of analysis, learn how to package a Python module and enjoy some
-nice time coding. Note that there are more elaborated projects already
-existing (see below).
+nice time coding. Note that *there are more elaborated projects already
+existing* (see at the end of this README).
 
 Disclaimer: while I try to make this code correct, there is no guarantee that
-it is bug free! Use at your own risk!
+it is bug free. Use at your own risk!
 
 ** Installation
 
@@ -41,19 +41,19 @@ it is bug free! Use at your own risk!
 - You can produce a =.dot= file (to be processed by the =dot= utility from
   =graphviz=) from a Python module with:
   #+BEGIN_SRC bash
-  pydep tests/exampleModule.py
+  pydep tests/inputFiles/exampleModule.py > deps.dot
   #+END_SRC
 - A pdf or png version of the graph can then be obtained with:
   #+BEGIN_SRC bash
-  dot -Tpdf exampleModule.graph.dot -o myGraph.pdf # pdf output
-  dot -Tpng exampleModule.graph.dot -o myGraph.png # png output
+  dot -Tpdf deps.dot -o deps.pdf # pdf output
+  dot -Tpng deps.dot -o deps.png # png output
   #+END_SRC
 
 ** Example output
 
 Here is an example output:
 #+BEGIN_CENTER
-[[https://github.com/matthieu-bruneaux/pydep/blob/master/doc_examples/exampleModule.graph.png]]
+[[https://github.com/matthieu-bruneaux/pydep/blob/master/tests/expectedFiles/pydep.png]]
 #+END_CENTER
 
 The original Python file was:
