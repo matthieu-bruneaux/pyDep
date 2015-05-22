@@ -220,6 +220,39 @@ class TestFilterLocalCalls(unittest.TestCase) :
         result = self.localCalls["simpleFunc"]
         expected = []
         self.assertItemsEqual(result, expected)
+
+### ** class TestGetDotOptions
+
+class TestGetDotOptions(unittest.TestCase) :
+
+### *** setUp and tearDown
+
+    def setUp(self) :
+        self.parser = mod._makeParser()
+
+### *** Test
+
+    def test_nodeShape_000(self) :
+        args = ["myMod.py", "--nodeShape", "circle"]
+        result = mod.getDotOptions(self.parser.parse_args(args))
+        expected = {"nodeShape" : "circle"}
+        self.assertDictEqual(result, expected)
+
+### ** class TestIsAvailable
+
+class TestIsAvailable(unittest.TestCase) :
+
+### *** Test
+
+    def test_available_000(self) :
+        result = mod._isAvailable("ls")
+        self.assertTrue(result)
+
+    def test_notAvailable_000(self) :
+        result = mod._isAvailable("thisIsAnUnavailableProgram")
+        self.assertFalse(result)
+
+        
         
 # ### ** class TestSourceParsing
 

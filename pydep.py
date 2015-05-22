@@ -193,7 +193,7 @@ def viewDotContent(content) :
         subprocess returncode: The returned value from the ``display`` process.
 
     """
-    if not (_is_available("dot") and _is_available("display")) :
+    if not (_isAvailable("dot") and _isAvailable("display")) :
         raise Exception("Dot or ImageMagick is missing, cannot display the graph")
     commandLineDot = ["dot", "-Tpng"]
     pDot = subprocess.Popen(commandLineDot, stdout = subprocess.PIPE,
@@ -203,9 +203,9 @@ def viewDotContent(content) :
     pDisplay.communicate(input = pDot.communicate(content)[0])
     return pDisplay.wait()
 
-### ** _is_available(program)
+### ** _isAvailable(program)
 
-def _is_available(program) :
+def _isAvailable(program) :
     """Function to test if a program can be called from Python. Based on a post
     from stackoverflow: http://stackoverflow.com/questions/11210104/check-if-a-program-exists-from-a-python-script
     The function tries to execute: program --help.
