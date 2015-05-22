@@ -191,6 +191,35 @@ class TestGetFunctionCalls(unittest.TestCase) :
         result = mod.getFunctionCalls(self.funcDefs)["sensibleFib"]
         expected = ["fib", "Exception"]
         self.assertItemsEqual(result, expected)
+
+### ** class TestFilterLocalCalls
+
+class TestFilterLocalCalls(unittest.TestCase) :
+
+### *** setUp and tearDown
+
+    def setUp(self) :
+        self.astSource = mod.astParseFile(MY_TEST_MODULE)
+        self.funcDefs = mod.getFunctionDef(self.astSource)
+        self.funcCalls = mod.getFunctionCalls(self.funcDefs)
+        self.localCalls = mod.filterLocalCalls(mod.getFunctionCalls(self.funcDefs))
+
+### *** Test
+
+    def test_localCalls_000(self) :
+        result = self.localCalls["fib"]
+        expected = ["fib"]
+        self.assertItemsEqual(result, expected)
+
+    def test_localCalls_001(self) :
+        result = self.localCalls["sensibleFib"]
+        expected = ["fib"]
+        self.assertItemsEqual(result, expected)
+
+    def test_localCalls_002(self) :
+        result = self.localCalls["simpleFunc"]
+        expected = []
+        self.assertItemsEqual(result, expected)
         
 # ### ** class TestSourceParsing
 
