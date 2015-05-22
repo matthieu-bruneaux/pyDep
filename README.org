@@ -16,38 +16,38 @@ it is bug free. Use at your own risk!
 ** Installation
 
 - You can clone the git repository with:
-  #+BEGIN_EXAMPLE
+  #+BEGIN_SRC bash
   git clone https://github.com/matthieu-bruneaux/pydep.git
-  #+END_EXAMPLE
+  #+END_SRC
 - You can then install the module with:
-  #+BEGIN_EXAMPLE
+  #+BEGIN_SRC bash
   sudo make install
-  #+END_EXAMPLE
+  #+END_SRC
 - To remove it, run (from the git repository folder):
-  #+BEGIN_EXAMPLE
+  #+BEGIN_SRC bash
   sudo make uninstall
-  #+END_EXAMPLE
+  #+END_SRC
   or from any folder:
-  #+BEGIN_EXAMPLE
+  #+BEGIN_SRC bash
   sudo pip uninstall pydep
-  #+END_EXAMPLE
+  #+END_SRC
 
 ** Usage
 
 - You can see the detailed usage instructions with:
-  #+BEGIN_EXAMPLE
+  #+BEGIN_SRC bash
   pydep -h
-  #+END_EXAMPLE
+  #+END_SRC
 - You can produce a =.dot= file (to be processed by the =dot= utility from
   =graphviz=) from a Python module with:
-  #+BEGIN_EXAMPLE
+  #+BEGIN_SRC bash
   pydep tests/inputFiles/exampleModule.py > deps.dot
-  #+END_EXAMPLE
+  #+END_SRC
 - A pdf or png version of the graph can then be obtained with:
-  #+BEGIN_EXAMPLE
+  #+BEGIN_SRC bash
   dot -Tpdf deps.dot -o deps.pdf # pdf output
   dot -Tpng deps.dot -o deps.png # png output
-  #+END_EXAMPLE
+  #+END_SRC
 
 ** Example output
 
