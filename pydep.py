@@ -137,21 +137,46 @@ def writeDotSubgraphs(subgraphGroups, builtIn = False) :
             o += "}\n"
     return o
         
-### ** makeDotFileContent(relations, dotOptions)
 
-def makeDotFileContent(relations, dotOptions = None) :
+### ** _getFuncFromRelations(relations, getSingles = False)
+
+def _getFuncFromRelations(relations, getSingles = False) :
+    """Get the list of all functions present in a dictionary describing 
+    function call relations
+
+    Args:
+        relations (dict): Dictionary describing the function relations, 
+          output from :func:`getFunctionCalls` or :func:`filterLocalCalls`
+        getSingles (boolean): If False, do not return functions which are not 
+          calling nor called by another function
+
+    Returns:
+        list: List of function names
+
+    """
+    allFunctions = set([])
+    if getSingles :
+        for caller in relations.keys() :
+            allFunctions.add(caller)
+            for called in relations[caller] :
+                allFunctions.add(called)
+    else :
+        for caller in relations.keys() :
+            for called in relations[caller] :
+                allFunctions.add(caller)
+                allFunctions.add(called)
+    return list(allFunctions)
+                
+### ** makeDotFileContent(relations, dotOptions, drawSingles)
+
+def makeDotFileContent(relations, dotOptions = None, drawSingles = False) :
     if dotOptions is None :
         dotOptions = dict()
     o = ""
     o += "digraph G {\n"
     o += "rankdir=LR;\n"
     o += "subgraph cluster_1 {\n"
-    allFunctions = set()
-    allowedFunctions = []    
-    for caller in relations.keys() :
-        for called in relations[caller] :
-            allFunctions.add(caller)
-            allFunctions.add(called)
+    allFunctions = _getFuncFromRelations(relations, drawSingles)
     if "nodeShape" in dotOptions.keys() :
         o += ("node[shape=" + dotOptions["nodeShape"] + "," +
               "style=filled," +
@@ -231,7 +256,7 @@ def _isAvailable(program) :
 
 ### ** makeDotFromSrc(filename)
 
-def makeDotFromSrc(filename, getMethods = False) :
+def makeDotFromSrc(filename, dotOptions = None, drawSingles = False) :
     """Prepare the dot content describing a source file dependency graph
 
     Args:
@@ -244,9 +269,11 @@ def makeDotFromSrc(filename, getMethods = False) :
     parsedSource = astParseFile(filename)
     functionDefs = getFunctionDef(parsedSource)
     functionCalls = filterLocalCalls(getFunctionCalls(functionDefs))
-    dotOptions = {"nodeShape" : "box"}
+    if dotOptions is None :
+        dotOptions = {"nodeShape" : "box"}
     dotContent = makeDotFileContent(functionCalls,
-                                    dotOptions = dotOptions)
+                                    dotOptions,
+                                    drawSingles)
     return dotContent
 
 ### * Main-related functions
@@ -276,6 +303,9 @@ def _makeParser() :
     parser.add_argument("-q", "--quickView", action = "store_true",
                         help = "Provide a simple display of the dot file through "
                         "ImageMagick and remove the dot file")
+    parser.add_argument("-s", "--drawSingles", action = "store_true",
+                        help = "Draw functions which are not calling nor called by "
+                        "another function")
     # parser.add_argument("-m", "--getMethods", action = "store_true",
     #                     help = "Also output method calls",
     #                     default = False)
@@ -311,7 +341,9 @@ def _main(args = None, stdout = None, stderr = None) :
     if stderr is None :
         stderr = sys.stderr
     # Main logic
-    dotContent = makeDotFromSrc(args.inputModule[0])
+    dotContent = makeDotFromSrc(args.inputModule[0],
+                                getDotOptions(args),
+                                args.drawSingles)
     if args.quickView :
         viewDotContent(dotContent)
     else :
