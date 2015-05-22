@@ -146,8 +146,10 @@ get if you need to analyse the dependencies in your project (disclaimer: this
 is the result of a Google search, I didn't tested all of those projects
 myself!). The list is not exhaustive and might miss some interesting projects:
 - [[http://blog.poormansmath.net/pydepgraph-a-dependencies-analyzer-for-python/][pydepgraph]] by Stefano Maggiolo ([[https://github.com/stefano-maggiolo/pydepgraph][GitHub repo]])
+- [[https://github.com/thebjorn/pydeps][pydeps]] by thebjorn
 - [[https://pythonhosted.org/modulegraph/][modulegraph]] by Ronald Oussoren
 - [[http://pycallgraph.slowchop.com/en/master/][Python call graph]] by Gerald Kaszuba et al.
 - [[http://furius.ca/snakefood/][snakefood]] by Martin Blais
 - [[http://www.tarind.com/depgraph.html][py2depgraph]] by Toby Dickenson
 
+A quick search for "pydep" in GitHub might also return interesting hits.
