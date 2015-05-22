@@ -56,83 +56,23 @@ Here is an example output:
 [[https://github.com/matthieu-bruneaux/pydep/blob/master/tests/expectedFiles/pydep.png]]
 #+END_CENTER
 
-The original Python file was:
-#+BEGIN_SRC Python
-def fib(n) :
-    assert type(n) == int
-    if n == 0 or n == 1 :
-        return(1)
-    else :
-        return fib(n-1) + fib(n-2)
-
-def sensibleFib(n) :
-    if n < 20 :
-        return fib(n)
-    else :
-        raise Exception("n is too large")
-
-def makeDNAcomplement(dnaString) :
-    validateDNAstring(dnaString)
-    dnaComplementDict = {"A" : "T", "T" : "A", "G" : "C", "C" : "G"}
-    complement = ""
-    for nt in dnaString :
-        complement += dnaComplementDict[nt]
-    return complement
-
-def makeDNAreverseComplement(dnaString) :
-    validateDNAstring(dnaString)
-    complement = list(makeDNAcomplement(dnaString))
-    complement.reverse()
-    return("".join(complement))
-
-def validateDNAstring(dnaString) :
-    if not isValidDNAstring(dnaString) :
-        raise Exception("Not a valid DNA string")
-
-def isValidDNAstring(dnaString) :
-    allowedChar = "ATGC"
-    return(all([x in allowedChar for x in dnaString]))
-
-def transcribeDNA(dnaString) :
-    validateDNAstring(dnaString)
-    transcript = makeDNAcomplement(dnaString)
-    transcript = transcript.replace("T", "U")
-    return(transcript)
-
-def simpleFunc(x) :
-    return x
-
-def evenSimplerFunc(x) :
-    pass
-#+END_SRC
-
-The generated dot file was:
-#+BEGIN_EXAMPLE
-digraph G {
-node[shape=box];
-fib -> fib;
-sensibleFib -> fib;
-makeDNAreverseComplement -> makeDNAcomplement;
-makeDNAreverseComplement -> validateDNAstring;
-makeDNAcomplement -> validateDNAstring;
-validateDNAstring -> isValidDNAstring;
-transcribeDNA -> makeDNAcomplement;
-transcribeDNA -> validateDNAstring;
-}
-#+END_EXAMPLE
-
 ** Makefile
 
-A Makefile is provided, with the following actions (targets) among others:
-- =make examples= :: run pyDep on simple example module files and process the
-     produced dot files with =dot= to make pdf files
-- =make test= :: run the project tests with =nosetests=. Coverage can be
-                 visualized with a web browser afterwards. Requires =nose= and
-                 =coverage= Python modules, which can be installed with =sudo
-                 pip nose= and =sudo pip coverage=.
-- =make clean= :: clean everything (pyc files, test files, examples files)
-
-You can also just type =make= to get some summary help.
+A Makefile is provided, type =make= to get some summary usage information:
+#+BEGIN_EXAMPLE
+Makefile for the pydep Python module                   
+                                                                  
+Type: "make <target>" where <target> is one of the following:   
+                                                                  
+  test             Run the tests with coverage output             
+  doc              Run Sphinx to make the docs                    
+  clean            Remove generated doc, tests and pyc files      
+                                                                  
+You need sudo rights for the following ones:                      
+                                                                  
+  install          Install the module and command-line tools      
+  uninstall        Uninstall the module                           
+#+END_EXAMPLE
 
 ** Resources used
 
