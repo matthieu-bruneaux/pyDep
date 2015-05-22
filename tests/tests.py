@@ -169,6 +169,28 @@ class TestGetFunctionCallsFromOne(unittest.TestCase) :
                   for x in self.astSource.body]
         expected = MTM_N_CALLS
         self.assertListEqual(result, expected)
+
+### ** class TestGetFunctionCalls
+
+class TestGetFunctionCalls(unittest.TestCase) :
+
+### *** setUp and tearDown
+
+    def setUp(self) :
+        self.astSource = mod.astParseFile(MY_TEST_MODULE)
+        self.funcDefs = mod.getFunctionDef(self.astSource)
+
+### *** Test
+
+    def test_functionCalls_000(self) :
+        result = mod.getFunctionCalls(self.funcDefs)["fib"]
+        expected = ["fib", "type"]
+        self.assertItemsEqual(result, expected)
+
+    def test_functionCalls_001(self) :
+        result = mod.getFunctionCalls(self.funcDefs)["sensibleFib"]
+        expected = ["fib", "Exception"]
+        self.assertItemsEqual(result, expected)
         
 # ### ** class TestSourceParsing
 
